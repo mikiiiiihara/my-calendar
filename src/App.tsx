@@ -30,7 +30,7 @@ const App: React.FC = () => {
       unSub();
     };
   }, [dispatch]);
-  if (loading) return <></>;
+  if (loading) return <p>Loading...</p>;
   return (
     <>
       {user.uid ? (
