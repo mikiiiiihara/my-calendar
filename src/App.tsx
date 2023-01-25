@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser, login, logout } from "./features/userSlice";
 import { auth } from "./firebase";
@@ -9,7 +9,6 @@ import Auth from "./components/auth/Auth";
 const App: React.FC = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     //Firebase ver9 compliant
@@ -24,13 +23,11 @@ const App: React.FC = () => {
       } else {
         dispatch(logout());
       }
-      setLoading(false);
     });
     return () => {
       unSub();
     };
   }, [dispatch]);
-  if (loading) return <></>;
   return (
     <>
       {user.uid ? (
