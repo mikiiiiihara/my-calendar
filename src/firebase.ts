@@ -13,6 +13,7 @@ const firebaseApp = initializeApp({
   messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 });
+
 //Firebase ver9 compliant
 export const storage = getStorage(firebaseApp);
 export const auth = getAuth(firebaseApp);
