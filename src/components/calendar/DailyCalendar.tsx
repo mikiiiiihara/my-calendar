@@ -130,6 +130,8 @@ const DailyCalendar: React.FC = () => {
         tasks={tasks}
         viewMode={ViewMode.Hour}
         todayColor="rgb(250,246,225)"
+        barFill={80}
+        listCellWidth="220px"
       />
     </>
   );
