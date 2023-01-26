@@ -129,7 +129,6 @@ const DailyCalendar: React.FC = () => {
       <Gantt
         tasks={tasks}
         viewMode={ViewMode.Hour}
-        onClick={() => console.log("aaa")}
         todayColor="rgb(250,246,225)"
       />
     </>
