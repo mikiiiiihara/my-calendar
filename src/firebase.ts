@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 //Firebase ver9 compliant
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -18,4 +18,3 @@ const firebaseApp = initializeApp({
 export const storage = getStorage(firebaseApp);
 export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp);
-export const provider = new GoogleAuthProvider();
