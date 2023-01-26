@@ -34,7 +34,7 @@ const App: React.FC = () => {
       unSub();
       console.log("unSubを呼び出しました");
     };
-  }, [dispatch, loading]);
+  }, [dispatch]);
 
   if (loading) return <></>;
   return (
