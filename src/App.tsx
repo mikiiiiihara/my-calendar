@@ -5,6 +5,7 @@ import { auth } from "./firebase";
 //Firebase ver9 compliant
 import { onAuthStateChanged } from "firebase/auth";
 import Auth from "./components/auth/Auth";
+import Home from "./components/home/Home";
 
 const App: React.FC = () => {
   const user = useSelector(selectUser);
@@ -14,7 +15,6 @@ const App: React.FC = () => {
   useEffect(() => {
     //Firebase ver9 compliant
     const unSub = onAuthStateChanged(auth, (authUser) => {
-      console.log("ログイン状態を確認しています・・・");
       if (authUser) {
         dispatch(
           login({
@@ -22,33 +22,19 @@ const App: React.FC = () => {
             displayName: authUser.displayName,
           })
         );
-        console.log("ログインしています・・・");
         setLoading(false);
       } else {
         dispatch(logout());
-        console.log("ログアウトしています・・・");
         setLoading(false);
       }
     });
     return () => {
       unSub();
-      console.log("unSubを呼び出しました");
     };
   }, [dispatch]);
 
   if (loading) return <></>;
-  return (
-    <>
-      {user.uid ? (
-        <div>
-          <p>ログインしますた</p>
-          <button onClick={() => auth.signOut()}>Logout</button>
-        </div>
-      ) : (
-        <Auth />
-      )}
-    </>
-  );
+  return <>{user.uid ? <Home /> : <Auth />}</>;
 };
 
 export default App;
