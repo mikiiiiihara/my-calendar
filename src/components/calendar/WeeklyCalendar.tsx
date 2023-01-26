@@ -54,7 +54,6 @@ const WeeklyCalendar: React.FC = () => {
     calendarApi.unselect(); // 選択した部分の選択を解除
   }, []);
   const handleEventClick = useCallback((arg: EventClickArg) => {
-    console.log(arg.event);
     console.log(arg.event.id);
     console.log(arg.event.title);
   }, []);

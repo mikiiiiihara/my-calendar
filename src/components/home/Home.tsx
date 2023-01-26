@@ -10,11 +10,23 @@ const Home: React.FC = () => {
   );
   return (
     <div>
-      <button onClick={() => auth.signOut()}>Logout</button>
-      <button onClick={() => setDisplayType(DISPLAY_TYPE.weekly)}>
-        weekly
-      </button>
-      <button onClick={() => setDisplayType(DISPLAY_TYPE.daily)}>daily</button>
+      <div className="nav">
+        <button className="nav-button" onClick={() => auth.signOut()}>
+          Logout
+        </button>
+        <button
+          className="nav-button"
+          onClick={() => setDisplayType(DISPLAY_TYPE.weekly)}
+        >
+          weekly
+        </button>
+        <button
+          className="nav-button"
+          onClick={() => setDisplayType(DISPLAY_TYPE.daily)}
+        >
+          daily
+        </button>
+      </div>
       {displayType === DISPLAY_TYPE.weekly ? (
         <WeeklyCalendar />
       ) : (
