@@ -12,7 +12,6 @@ const DailyCalendar: React.FC = () => {
   const tasks = getTasks();
   const subTasks = getSubTasks();
   const dailyTasks = getDailyTasks(tasks, subTasks);
-  console.log(dailyTasks);
   return (
     <div className="scroll">
       <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
