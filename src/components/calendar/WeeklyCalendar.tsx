@@ -63,6 +63,7 @@ const WeeklyCalendar: React.FC = () => {
   return (
     <div>
       <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
+      <h1>Weekly Calendar</h1>
       <FullCalendar
         slotDuration="00:30:00" // 表示する時間軸の最小値
         selectable={true} // 日付選択可能

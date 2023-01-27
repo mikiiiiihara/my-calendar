@@ -129,7 +129,7 @@ const DailyCalendar: React.FC = () => {
   return (
     <>
       <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
-      <div>DailyCalendar</div>
+      <h1>Daily Calendar</h1>
       <Gantt
         tasks={tasks}
         viewMode={ViewMode.Hour}
