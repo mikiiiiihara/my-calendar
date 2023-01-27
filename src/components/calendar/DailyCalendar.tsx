@@ -127,7 +127,7 @@ const DailyCalendar: React.FC = () => {
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
   return (
-    <>
+    <div className="scroll">
       <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
       <h1>Daily Calendar</h1>
       <Gantt
@@ -135,11 +135,11 @@ const DailyCalendar: React.FC = () => {
         viewMode={ViewMode.Hour}
         todayColor="rgb(250,246,225)"
         barFill={80}
-        listCellWidth="200px"
+        listCellWidth="180px"
         onSelect={() => setShowDetail(true)}
         onExpanderClick={() => setShowDetail(true)}
       />
-    </>
+    </div>
   );
 };
 
