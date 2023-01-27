@@ -64,7 +64,6 @@ const WeeklyCalendar: React.FC = () => {
     <div>
       <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
       <FullCalendar
-        locale="ja" // 日本語
         slotDuration="00:30:00" // 表示する時間軸の最小値
         selectable={true} // 日付選択可能
         titleFormat={{

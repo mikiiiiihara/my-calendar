@@ -135,8 +135,9 @@ const DailyCalendar: React.FC = () => {
         viewMode={ViewMode.Hour}
         todayColor="rgb(250,246,225)"
         barFill={80}
-        listCellWidth="210px"
+        listCellWidth="200px"
         onSelect={() => setShowDetail(true)}
+        onExpanderClick={() => setShowDetail(true)}
       />
     </>
   );
