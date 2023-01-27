@@ -6,48 +6,14 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import DetailTask from "../detailTask/DetailTask";
-
-type Event = {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  backgroundColor: string;
-};
-
-// TODO: useContextで管理する
-const events: Event[] = [
-  {
-    id: "1",
-    title: "航空券取る - Skyscannerで探す",
-    start: "2023-01-24 10:00:00",
-    end: "2023-01-25 10:00:00",
-    backgroundColor: "#ff6347",
-  },
-  {
-    id: "2",
-    title: "航空券取る - 予約する",
-    start: "2023-01-25 10:00:00",
-    end: "2023-01-26 11:00:00",
-    backgroundColor: "#4169e1",
-  },
-  {
-    id: "3",
-    title: "韓国に旅行する - 　カジノで大勝ちする",
-    start: "2023-01-26 10:00:00",
-    end: "2023-01-26 14:00:00",
-    backgroundColor: "#ffd700",
-  },
-  {
-    id: "3",
-    title: "韓国に旅行する - 　サムギョプサルを食べる",
-    start: "2023-01-26 14:00:00",
-    end: "2023-01-26 18:00:00",
-    backgroundColor: "#3cb371",
-  },
-];
+import { useTasks } from "../../hooks/useTasks";
+import { getWeeklyTasks } from "../../function/getWeeklyTasks";
 
 const WeeklyCalendar: React.FC = () => {
+  const { getTasks, getSubTasks } = useTasks();
+  const tasks = getTasks();
+  const subTasks = getSubTasks();
+  const weeklyTasks = getWeeklyTasks(tasks, subTasks);
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
   const handleSelectClick = useCallback((arg: DateSelectArg) => {
@@ -85,7 +51,7 @@ const WeeklyCalendar: React.FC = () => {
         }}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
-        events={events}
+        events={weeklyTasks}
         select={handleSelectClick} // カレンダー範囲選択時
         eventClick={handleEventClick} // イベントクリック時
       />
