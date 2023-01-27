@@ -16,17 +16,36 @@ const WeeklyCalendar: React.FC = () => {
   const weeklyTasks = getWeeklyTasks(tasks, subTasks);
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState("");
   const handleSelectClick = useCallback((arg: DateSelectArg) => {
     console.log(arg);
     const calendarApi = arg.view.calendar;
     calendarApi.unselect(); // 選択した部分の選択を解除
   }, []);
-  const handleEventClick = useCallback((arg: EventClickArg) => {
-    setShowDetail(true);
-  }, []);
+  const handleEventClick = useCallback(
+    (arg: EventClickArg) => {
+      // 選択した子タスクの親タスクを取得
+      const selectedTask = subTasks.find(
+        (subTask) => subTask.id === arg.event.id
+      );
+      if (selectedTask == null)
+        throw new Error("選択した子タスクを確認できませんでした。");
+      setSelectedTitle(selectedTask.parentTask);
+      setShowDetail(true);
+    },
+    [subTasks]
+  );
   return (
     <div>
-      <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
+      {selectedTitle !== null && selectedTitle !== "" ? (
+        <DetailTask
+          showFlag={showDetail}
+          setShowModal={setShowDetail}
+          selectedTitle={selectedTitle}
+        />
+      ) : (
+        <></>
+      )}
       <h1>Weekly Calendar</h1>
       <FullCalendar
         slotDuration="00:30:00" // 表示する時間軸の最小値
