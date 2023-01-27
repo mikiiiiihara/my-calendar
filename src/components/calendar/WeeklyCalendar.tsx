@@ -23,8 +23,6 @@ const WeeklyCalendar: React.FC = () => {
   }, []);
   const handleEventClick = useCallback((arg: EventClickArg) => {
     setShowDetail(true);
-    console.log(arg.event.id);
-    console.log(arg.event.title);
   }, []);
   return (
     <div>
