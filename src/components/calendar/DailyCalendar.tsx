@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Gantt, Task, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
+import DetailTask from "../detailTask/DetailTask";
 
 // TODO: 今日の日付以降（１週間とかかな）でfilterしてデータ作成して表示させたい
 const currentDate = new Date();
 const tasks: Task[] = [
   {
-    start: new Date(),
+    start: currentDate,
     end: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -24,7 +25,7 @@ const tasks: Task[] = [
     },
   },
   {
-    start: new Date(),
+    start: currentDate,
     end: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -64,7 +65,7 @@ const tasks: Task[] = [
     },
   },
   {
-    start: new Date(),
+    start: currentDate,
     end: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -82,7 +83,7 @@ const tasks: Task[] = [
     },
   },
   {
-    start: new Date(),
+    start: currentDate,
     end: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -123,15 +124,19 @@ const tasks: Task[] = [
   },
 ];
 const DailyCalendar: React.FC = () => {
+  // 画面表示
+  const [showDetail, setShowDetail] = useState(false);
   return (
     <>
+      <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
       <div>DailyCalendar</div>
       <Gantt
         tasks={tasks}
         viewMode={ViewMode.Hour}
         todayColor="rgb(250,246,225)"
         barFill={80}
-        listCellWidth="220px"
+        listCellWidth="210px"
+        onSelect={() => setShowDetail(true)}
       />
     </>
   );

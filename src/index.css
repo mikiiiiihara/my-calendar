@@ -25,3 +25,13 @@ code {
 .nav {
   margin-left: auto;
 }
+
+.btn-secondary {
+  color: white;
+  font-size: 1rem;
+  background-color: gray;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 1px;
+}

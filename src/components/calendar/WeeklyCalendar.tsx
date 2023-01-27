@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
+import DetailTask from "../detailTask/DetailTask";
 
 type Event = {
   id: string;
@@ -18,28 +19,28 @@ type Event = {
 const events: Event[] = [
   {
     id: "1",
-    title: "Todo 1",
+    title: "航空券取る - Skyscannerで探す",
     start: "2023-01-24 10:00:00",
     end: "2023-01-25 10:00:00",
     backgroundColor: "#ff6347",
   },
   {
     id: "2",
-    title: "Todo 2",
+    title: "航空券取る - 予約する",
     start: "2023-01-25 10:00:00",
     end: "2023-01-26 11:00:00",
     backgroundColor: "#4169e1",
   },
   {
     id: "3",
-    title: "Todo 3",
+    title: "韓国に旅行する - 　カジノで大勝ちする",
     start: "2023-01-26 10:00:00",
     end: "2023-01-26 14:00:00",
     backgroundColor: "#ffd700",
   },
   {
     id: "3",
-    title: "Todo 4",
+    title: "韓国に旅行する - 　サムギョプサルを食べる",
     start: "2023-01-26 14:00:00",
     end: "2023-01-26 18:00:00",
     backgroundColor: "#3cb371",
@@ -47,18 +48,21 @@ const events: Event[] = [
 ];
 
 const WeeklyCalendar: React.FC = () => {
+  // 画面表示
+  const [showDetail, setShowDetail] = useState(false);
   const handleSelectClick = useCallback((arg: DateSelectArg) => {
     console.log(arg);
-    alert("出力したで〜");
     const calendarApi = arg.view.calendar;
     calendarApi.unselect(); // 選択した部分の選択を解除
   }, []);
   const handleEventClick = useCallback((arg: EventClickArg) => {
+    setShowDetail(true);
     console.log(arg.event.id);
     console.log(arg.event.title);
   }, []);
   return (
     <div>
+      <DetailTask showFlag={showDetail} setShowModal={setShowDetail} />
       <FullCalendar
         locale="ja" // 日本語
         slotDuration="00:30:00" // 表示する時間軸の最小値
