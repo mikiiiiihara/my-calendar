@@ -6,4 +6,5 @@ export type Task = {
   start: Date;
   end: Date;
   status: Status;
+  memo: string;
 };

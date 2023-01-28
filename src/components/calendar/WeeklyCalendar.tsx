@@ -17,8 +17,11 @@ const WeeklyCalendar: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [start, setStart] = useState<Date | undefined>(undefined);
+  const [end, setEnd] = useState<Date | undefined>(undefined);
   const handleSelectClick = useCallback((arg: DateSelectArg) => {
-    console.log(arg);
+    setStart(arg.start);
+    setEnd(arg.end);
     // 新規追加画面を表示
     setShowCreateModal(true);
     const calendarApi = arg.view.calendar;
@@ -51,6 +54,8 @@ const WeeklyCalendar: React.FC = () => {
       <CreateTask
         showFlag={showCreateModal}
         setShowModal={setShowCreateModal}
+        start={start || new Date()}
+        end={end || new Date()}
       />
       <h1>Weekly Calendar</h1>
       <FullCalendar

@@ -20,6 +20,7 @@ export const useSubTasks = () => {
         title: "Skyscannerで探す",
         parentTask: "航空券取る",
         status: "Done",
+        memo: "テスト",
       },
       {
         id: "2",
@@ -36,6 +37,7 @@ export const useSubTasks = () => {
         title: "予約する",
         parentTask: "航空券取る",
         status: "In Review",
+        memo: "テスト",
       },
       {
         id: "3",
@@ -52,6 +54,7 @@ export const useSubTasks = () => {
         title: "Q-CODEを入力する",
         parentTask: "韓国に旅行する",
         status: "In Progress",
+        memo: "テスト",
       },
       {
         id: "4",
@@ -68,6 +71,7 @@ export const useSubTasks = () => {
         title: "カジノで大勝ちする",
         parentTask: "韓国に旅行する",
         status: "Todo",
+        memo: "テスト",
       },
       {
         id: "5",
@@ -84,6 +88,7 @@ export const useSubTasks = () => {
         title: "サムギョプサルを食べる",
         parentTask: "韓国に旅行する",
         status: "Todo",
+        memo: "テスト",
       },
     ];
     setSubTasks(subTasksData);

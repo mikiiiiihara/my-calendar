@@ -19,6 +19,7 @@ export const useTasks = () => {
           currentDate.getDate() + 2
         ),
         status: "In Review",
+        memo: "テスト",
       },
       {
         id: "2",
@@ -34,6 +35,7 @@ export const useTasks = () => {
           currentDate.getDate() + 6
         ),
         status: "Todo",
+        memo: "テスト",
       },
     ];
     setTasks(tasks);

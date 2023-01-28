@@ -39,3 +39,8 @@ code {
 .scroll {
   overflow-x: scroll;
 }
+
+input:disabled,
+textarea:disabled {
+  color: black;
+}
