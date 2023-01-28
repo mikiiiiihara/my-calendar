@@ -1,5 +1,5 @@
 import React from "react";
-import { useTasks } from "../../hooks/useTasks";
+import { useTasksContext } from "../../contexts/tasksContext";
 import styles from "./DetailTask.module.css";
 
 type Props = {
@@ -13,13 +13,11 @@ const DetailTask: React.FC<Props> = ({
   setShowModal,
   selectedTitle,
 }) => {
-  const { getTasks, getSubTasks } = useTasks();
+  const { tasks, subTasks } = useTasksContext();
   const closeModal = () => {
     setShowModal(false);
   };
   if (selectedTitle !== "" && selectedTitle !== undefined) {
-    const tasks = getTasks();
-    const subTasks = getSubTasks();
     const selectedTask = tasks.find((task) => task.title === selectedTitle);
     // 選択した親タスクがない場合、アラート出す
     if (selectedTask == null)

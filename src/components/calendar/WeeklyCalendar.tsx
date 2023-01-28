@@ -6,19 +6,21 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import DetailTask from "../detailTask/DetailTask";
-import { useTasks } from "../../hooks/useTasks";
 import { getWeeklyTasks } from "../../function/getWeeklyTasks";
+import { useTasksContext } from "../../contexts/tasksContext";
+import CreateTask from "../createTask/CreateTask";
 
 const WeeklyCalendar: React.FC = () => {
-  const { getTasks, getSubTasks } = useTasks();
-  const tasks = getTasks();
-  const subTasks = getSubTasks();
+  const { tasks, subTasks } = useTasksContext();
   const weeklyTasks = getWeeklyTasks(tasks, subTasks);
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const handleSelectClick = useCallback((arg: DateSelectArg) => {
     console.log(arg);
+    // 新規追加画面を表示
+    setShowCreateModal(true);
     const calendarApi = arg.view.calendar;
     calendarApi.unselect(); // 選択した部分の選択を解除
   }, []);
@@ -46,6 +48,10 @@ const WeeklyCalendar: React.FC = () => {
       ) : (
         <></>
       )}
+      <CreateTask
+        showFlag={showCreateModal}
+        setShowModal={setShowCreateModal}
+      />
       <h1>Weekly Calendar</h1>
       <FullCalendar
         slotDuration="00:30:00" // 表示する時間軸の最小値

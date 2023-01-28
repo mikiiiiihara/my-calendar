@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { Gantt, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import DetailTask from "../detailTask/DetailTask";
-import { useTasks } from "../../hooks/useTasks";
 import { getDailyTasks } from "../../function/getDailyTasks";
+import { useTasksContext } from "../../contexts/tasksContext";
 
 const DailyCalendar: React.FC = () => {
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
-  const { getTasks, getSubTasks } = useTasks();
-  const tasks = getTasks();
-  const subTasks = getSubTasks();
+  const { tasks, subTasks } = useTasksContext();
   const dailyTasks = getDailyTasks(tasks, subTasks);
   // タスクバーダブルクリック時、ツリーを表示
   const onSelect = (parentTask: string) => {
