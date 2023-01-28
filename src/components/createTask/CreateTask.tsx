@@ -34,7 +34,18 @@ const CreateTask: React.FC<Props> = ({
   const [status, setStatus] = useState("");
   const [memo, setMemo] = useState("");
   // 子タスク
-  const [subTasks, setSubTasks] = useState<SubTask[]>([]);
+  const [subTasks, setSubTasks] = useState<SubTask[]>([
+    {
+      id: "1",
+      title: "",
+      start: new Date(),
+      end: new Date(),
+      // 登録時、まとめて代入する
+      parentTask: "",
+      status: "Todo",
+      memo: "",
+    },
+  ]);
   useEffect(() => {
     setStartValue(start);
     setEndValue(end);
@@ -65,7 +76,7 @@ const CreateTask: React.FC<Props> = ({
                     setTitle(e.target.value);
                   }}
                 />
-                <Stack direction="row" component="form" noValidate spacing={3}>
+                <Stack direction="row" spacing={3}>
                   <TextField
                     required
                     id="datetime-local"
@@ -106,6 +117,8 @@ const CreateTask: React.FC<Props> = ({
                     style={{ width: 200 }}
                   >
                     <MenuItem value={"Todo"}>Todo</MenuItem>
+                    <MenuItem value={"In Progress"}>In Progress</MenuItem>
+                    <MenuItem value={"In Review"}>In Review</MenuItem>
                     <MenuItem value={"Done"}>Done</MenuItem>
                   </Select>
                 </FormControl>

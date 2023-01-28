@@ -19,7 +19,7 @@ type Props = {
 
 const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
   // 連番管理用
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(2);
   // 項目を追加
   const addSubTaskDisplay = () => {
     setSubTasks([
@@ -68,7 +68,7 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                   console.log(e.target.value);
                 }}
               />
-              <Stack direction="row" component="form" noValidate spacing={3}>
+              <Stack direction="row" spacing={3}>
                 <TextField
                   required
                   id="datetime-local"
@@ -126,22 +126,26 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                 variant="outlined"
                 style={{ marginTop: "20px" }}
               />
-              <Grid
-                container
-                alignItems="flex-end"
-                justifyContent="flex-end"
-                direction="column"
-              >
-                <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    color="inherit"
-                    onClick={() => deleteSubtaskDisplay(subTask)}
-                  >
-                    削除
-                  </Button>
+              {subTask.id !== "1" ? (
+                <Grid
+                  container
+                  alignItems="flex-end"
+                  justifyContent="flex-end"
+                  direction="column"
+                >
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => deleteSubtaskDisplay(subTask)}
+                    >
+                      削除
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
+              ) : (
+                <></>
+              )}
             </li>
           ))
         ) : (
