@@ -13,9 +13,9 @@ import { WeeklyTask } from "../../types/weekly-task";
 
 const WeeklyCalendar: React.FC = () => {
   const { tasks, subTasks } = useTasksContext();
-  // 空の場合、計算しない
   let weeklyTasks: WeeklyTask[] = [];
-  if (tasks.length !== 0 && subTasks.length !== 0) {
+  // サブタスクが空の場合、計算しない
+  if (subTasks.length !== 0) {
     weeklyTasks = getWeeklyTasks(tasks, subTasks);
   }
   // 画面表示

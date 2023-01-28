@@ -175,7 +175,11 @@ const CreateTask: React.FC<Props> = ({
                   variant="outlined"
                   style={{ marginTop: "20px" }}
                 />
-                <SubTaskList subTasks={subTasks} setSubTasks={setSubTasks} />
+                <SubTaskList
+                  parentTaskEnd={endValue || new Date()}
+                  subTasks={subTasks}
+                  setSubTasks={setSubTasks}
+                />
                 <Grid
                   container
                   alignItems="center"

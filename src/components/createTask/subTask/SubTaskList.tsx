@@ -13,25 +13,32 @@ import { SubTask } from "../../../types/sub-task";
 import { convertDateToJST } from "../../../util/convertDateToJST";
 
 type Props = {
+  parentTaskEnd: Date;
   subTasks: SubTask[];
   setSubTasks: Function;
 };
 
-const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
+const SubTaskList: React.FC<Props> = ({
+  subTasks,
+  setSubTasks,
+  parentTaskEnd,
+}) => {
   // 連番管理用
   const [count, setCount] = useState(2);
   // 項目を追加
   const addSubTaskDisplay = () => {
     const length = subTasks.length - 1;
+    // 最新のサブタスク
     const latestSubTask = subTasks[length];
     setSubTasks([
       ...subTasks,
       {
         id: String(count),
         title: "",
-        // 最新のサブタスクの日付
+        // 最新のサブタスクの終了日付
         start: latestSubTask.end,
-        end: latestSubTask.end,
+        // 親タスクの終了日付
+        end: parentTaskEnd,
         // 登録時、まとめて代入する
         parentTask: "",
         status: "Todo",
