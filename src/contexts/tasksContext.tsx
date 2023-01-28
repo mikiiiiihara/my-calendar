@@ -12,11 +12,11 @@ type Props = {
 type ContextType = {
   tasks: Task[];
   createTask: (createTaskDto: CreateTaskDto) => Promise<string>;
-  deleteTask: () => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
   updateTask: () => Promise<void>;
   subTasks: SubTask[];
   createSubTask: (subTask: SubTask) => Promise<void>;
-  deleteSubTask: () => Promise<void>;
+  deleteSubTask: (id: string) => Promise<void>;
   updateSubTask: () => Promise<void>;
 };
 

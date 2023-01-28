@@ -1,7 +1,8 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import Stack from "@mui/material/Stack";
-import React from "react";
+import React, { useState } from "react";
 import { useTasksContext } from "../../contexts/tasksContext";
+import { SubTask } from "../../types/sub-task";
 import { convertDateToJST } from "../../util/convertDateToJST";
 import styles from "./DetailTask.module.css";
 
@@ -9,24 +10,36 @@ type Props = {
   showFlag: Boolean;
   setShowModal: Function;
   // 親タスクのID
-  selectedTitle?: string;
+  parentTitle?: string;
 };
 
 const DetailTask: React.FC<Props> = ({
   showFlag,
   setShowModal,
-  selectedTitle,
+  parentTitle,
 }) => {
-  const { tasks, subTasks } = useTasksContext();
+  const { tasks, subTasks, deleteTask, deleteSubTask } = useTasksContext();
+  const [selectedTitle, setSelectedTitle] = useState(parentTitle);
+
   const closeModal = () => {
     setShowModal(false);
   };
-
   // 削除処理
-  const deleteTask = (parentTaskId: string) => {
+  const executeDeleteTask = async (parentTaskId: string) => {
+    // 子を最初に削除(そうしないと子に紐付く親がなくなってしまうため)
+    const executeDeleteSubTask = (subTasks: SubTask[]) => {
+      // 削除したい親タスクのIdを持つ子タスクを抽出
+      const toDeleteSubTasks = subTasks.filter(
+        (subTask) => subTask.parentTaskId === parentTaskId
+      );
+      toDeleteSubTasks.map(async (subTask) => await deleteSubTask(subTask.id));
+    };
+    executeDeleteSubTask(subTasks);
+    setSelectedTitle("");
     // 親を削除
-    console.log(parentTaskId);
-    // 子を削除
+    await deleteTask(parentTaskId);
+    alert("タスクの削除が完了しました！");
+    closeModal();
   };
   // TODO: 更新処理
   if (selectedTitle !== "" && selectedTitle !== undefined) {
@@ -59,7 +72,7 @@ const DetailTask: React.FC<Props> = ({
                     <Button
                       variant="contained"
                       color="inherit"
-                      onClick={() => deleteTask(selectedTask.id)}
+                      onClick={() => executeDeleteTask(selectedTask.id)}
                     >
                       削除
                     </Button>

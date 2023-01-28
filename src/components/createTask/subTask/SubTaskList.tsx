@@ -206,6 +206,8 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                   style={{ width: 200 }}
                 >
                   <MenuItem value={"Todo"}>Todo</MenuItem>
+                  <MenuItem value={"In Progress"}>In Progress</MenuItem>
+                  <MenuItem value={"In Review"}>In Review</MenuItem>
                   <MenuItem value={"Done"}>Done</MenuItem>
                 </Select>
               </FormControl>

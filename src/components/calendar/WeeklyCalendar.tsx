@@ -52,7 +52,7 @@ const WeeklyCalendar: React.FC = () => {
         <DetailTask
           showFlag={showDetail}
           setShowModal={setShowDetail}
-          selectedTitle={selectedTitle}
+          parentTitle={selectedTitle}
         />
       ) : (
         <></>

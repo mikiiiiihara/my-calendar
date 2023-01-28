@@ -1,4 +1,11 @@
-import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+} from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { db } from "../firebase";
 import { SubTask } from "../types/sub-task";
@@ -63,7 +70,14 @@ export const useSubTasks = () => {
   );
 
   /* delete */
-  const deleteSubTask = useCallback(async (): Promise<void> => {}, []);
+  const deleteSubTask = useCallback(
+    async (id: string): Promise<void> => {
+      const userDocumentRef = doc(db, "subTasks", id);
+      await deleteDoc(userDocumentRef);
+      setSubTasks(subTasks.filter((task) => task.id !== id));
+    },
+    [subTasks]
+  );
   /* update */
   const updateSubTask = useCallback(async (): Promise<void> => {}, []);
 

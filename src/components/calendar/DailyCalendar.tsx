@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Gantt, ViewMode } from "gantt-task-react";
+import { Gantt, Task, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import DetailTask from "../detailTask/DetailTask";
 import { getDailyTasks } from "../../function/getDailyTasks";
@@ -10,7 +10,8 @@ const DailyCalendar: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
   const { tasks, subTasks } = useTasksContext();
-  const dailyTasks = getDailyTasks(tasks, subTasks);
+  let dailyTasks: Task[] = [];
+  dailyTasks = getDailyTasks(tasks, subTasks);
   // タスクバークリック時、ツリーを表示
   const onSelect = (parentTaskId: string) => {
     setSelectedTitle(parentTaskId);
@@ -22,7 +23,7 @@ const DailyCalendar: React.FC = () => {
         <DetailTask
           showFlag={showDetail}
           setShowModal={setShowDetail}
-          selectedTitle={selectedTitle}
+          parentTitle={selectedTitle}
         />
       ) : (
         <></>
