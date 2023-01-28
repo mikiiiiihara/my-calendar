@@ -34,24 +34,32 @@ const CreateTask: React.FC<Props> = ({
   const [status, setStatus] = useState("");
   const [memo, setMemo] = useState("");
   // 子タスク
-  const [subTasks, setSubTasks] = useState<SubTask[]>([
-    {
-      id: "1",
-      title: "",
-      start: new Date(),
-      end: new Date(),
-      // 登録時、まとめて代入する
-      parentTask: "",
-      status: "Todo",
-      memo: "",
-    },
-  ]);
+  const [subTasks, setSubTasks] = useState<SubTask[]>([]);
   useEffect(() => {
     setStartValue(start);
     setEndValue(end);
+    setSubTasks([
+      {
+        id: "1",
+        title: "",
+        start,
+        end,
+        // 登録時、まとめて代入する
+        parentTask: "",
+        status: "Todo",
+        memo: "",
+      },
+    ]);
   }, [end, start]);
   const closeModal = () => {
     setShowModal(false);
+  };
+  const registerNewTask = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    console.log("--親タスク--");
+    console.log(title, startValue, endValue, status, memo);
+    console.log("--子タスク--");
+    console.log(subTasks);
   };
   return (
     <>
@@ -59,7 +67,7 @@ const CreateTask: React.FC<Props> = ({
         <div className={styles.overlay}>
           <div className={styles.card}>
             <div className={styles.content}>
-              <form>
+              <form onSubmit={registerNewTask}>
                 <h1>Create a new task</h1>
                 <TextField
                   margin="normal"
