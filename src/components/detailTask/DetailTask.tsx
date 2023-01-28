@@ -8,6 +8,7 @@ import styles from "./DetailTask.module.css";
 type Props = {
   showFlag: Boolean;
   setShowModal: Function;
+  // 親タスクのID
   selectedTitle?: string;
 };
 
@@ -20,14 +21,27 @@ const DetailTask: React.FC<Props> = ({
   const closeModal = () => {
     setShowModal(false);
   };
+
+  // 削除処理
+  const deleteTask = (parentTaskId: string) => {
+    // 親を削除
+    console.log(parentTaskId);
+    // 子を削除
+  };
+  // TODO: 更新処理
   if (selectedTitle !== "" && selectedTitle !== undefined) {
-    const selectedTask = tasks.find((task) => task.title === selectedTitle);
+    const selectedTask = tasks.find((task) => task.id === selectedTitle);
     // 選択した親タスクがない場合、アラート出す
     if (selectedTask == null)
       throw new Error("親子タスクの紐付けを確認できませんでした。");
-    const selectedSubTasks = subTasks.filter(
-      (subTask) => subTask.parentTask === selectedTitle
+    const searchedSubTasks = subTasks.filter(
+      (subTask) => subTask.parentTaskId === selectedTask.id
     );
+    const selectedSubTasks = searchedSubTasks.sort(function (a, b) {
+      if (a.start < b.start) return -1;
+      if (a.start > b.start) return 1;
+      return 0;
+    });
     return (
       <>
         {showFlag ? ( // showFlagがtrueだったらModalを表示する
@@ -35,6 +49,22 @@ const DetailTask: React.FC<Props> = ({
             <div className={styles.card}>
               <div className={styles.content}>
                 <h1>{selectedTask.title}</h1>
+                <Grid
+                  container
+                  alignItems="flex-end"
+                  justifyContent="flex-end"
+                  direction="column"
+                >
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="inherit"
+                      onClick={() => deleteTask(selectedTask.id)}
+                    >
+                      削除
+                    </Button>
+                  </Grid>
+                </Grid>
                 <Stack direction="row" component="form" noValidate spacing={3}>
                   <TextField
                     disabled={true}

@@ -69,15 +69,23 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                 placeholder="タスク名を入力してください。"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const newSubTasks = subTasks.map((value) => {
-                    const { id, start, end, parentTask, status, memo } =
-                      subTask;
+                    const {
+                      id,
+                      start,
+                      end,
+                      parentTaskId,
+                      parentTaskName,
+                      status,
+                      memo,
+                    } = subTask;
                     if (value.id === id)
                       return {
                         id,
                         title: e.target.value,
                         start,
                         end,
-                        parentTask,
+                        parentTaskId,
+                        parentTaskName,
                         status,
                         memo,
                       };
@@ -98,15 +106,23 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                   }}
                   onChange={(e) => {
                     const newSubTasks = subTasks.map((value) => {
-                      const { id, title, end, parentTask, status, memo } =
-                        subTask;
+                      const {
+                        id,
+                        title,
+                        end,
+                        parentTaskId,
+                        parentTaskName,
+                        status,
+                        memo,
+                      } = subTask;
                       if (value.id === id)
                         return {
                           id,
                           title,
                           start: new Date(e.target.value),
                           end,
-                          parentTask,
+                          parentTaskId,
+                          parentTaskName,
                           status,
                           memo,
                         };
@@ -127,15 +143,23 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                   }}
                   onChange={(e) => {
                     const newSubTasks = subTasks.map((value) => {
-                      const { id, title, start, parentTask, status, memo } =
-                        subTask;
+                      const {
+                        id,
+                        title,
+                        start,
+                        parentTaskId,
+                        parentTaskName,
+                        status,
+                        memo,
+                      } = subTask;
                       if (value.id === id)
                         return {
                           id,
                           title,
                           start,
                           end: new Date(e.target.value),
-                          parentTask,
+                          parentTaskId,
+                          parentTaskName,
                           status,
                           memo,
                         };
@@ -154,15 +178,23 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                   value={subTask.status}
                   onChange={(e) => {
                     const newSubTasks = subTasks.map((value) => {
-                      const { id, title, start, end, parentTask, memo } =
-                        subTask;
+                      const {
+                        id,
+                        title,
+                        start,
+                        end,
+                        parentTaskId,
+                        parentTaskName,
+                        memo,
+                      } = subTask;
                       if (value.id === id)
                         return {
                           id,
                           title,
                           start,
                           end,
-                          parentTask,
+                          parentTaskId,
+                          parentTaskName,
                           status: e.target.value as string,
                           memo,
                         };
@@ -186,15 +218,23 @@ const SubTaskList: React.FC<Props> = ({ subTasks, setSubTasks }) => {
                 placeholder="メモ"
                 onChange={(e) => {
                   const newSubTasks = subTasks.map((value) => {
-                    const { id, title, start, end, parentTask, status } =
-                      subTask;
+                    const {
+                      id,
+                      title,
+                      start,
+                      end,
+                      parentTaskId,
+                      parentTaskName,
+                      status,
+                    } = subTask;
                     if (value.id === id)
                       return {
                         id,
                         title,
                         start,
                         end,
-                        parentTask,
+                        parentTaskId,
+                        parentTaskName,
                         status,
                         memo: e.target.value,
                       };

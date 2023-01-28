@@ -11,9 +11,9 @@ const DailyCalendar: React.FC = () => {
   const [selectedTitle, setSelectedTitle] = useState("");
   const { tasks, subTasks } = useTasksContext();
   const dailyTasks = getDailyTasks(tasks, subTasks);
-  // タスクバーダブルクリック時、ツリーを表示
-  const onSelect = (parentTask: string) => {
-    setSelectedTitle(parentTask);
+  // タスクバークリック時、ツリーを表示
+  const onSelect = (parentTaskId: string) => {
+    setSelectedTitle(parentTaskId);
     setShowDetail(true);
   };
   return (
@@ -28,15 +28,19 @@ const DailyCalendar: React.FC = () => {
         <></>
       )}
       <h1>Daily Calendar</h1>
-      <Gantt
-        tasks={dailyTasks}
-        viewMode={ViewMode.Hour}
-        todayColor="rgb(250,246,225)"
-        barFill={80}
-        listCellWidth="180px"
-        onSelect={(e) => onSelect(e.project || e.name)}
-        onExpanderClick={() => setShowDetail(true)}
-      />
+      {dailyTasks.length !== 0 ? (
+        <Gantt
+          tasks={dailyTasks}
+          viewMode={ViewMode.Hour}
+          todayColor="rgb(250,246,225)"
+          barFill={80}
+          listCellWidth="180px"
+          onSelect={(e) => onSelect(e.project || e.id)}
+          onExpanderClick={() => setShowDetail(true)}
+        />
+      ) : (
+        <p>登録されているタスクはありません。</p>
+      )}
     </div>
   );
 };

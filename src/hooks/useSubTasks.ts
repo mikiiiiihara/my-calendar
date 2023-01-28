@@ -1,4 +1,6 @@
+import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
+import { db } from "../firebase";
 import { SubTask } from "../types/sub-task";
 
 export const useSubTasks = () => {
@@ -7,92 +9,63 @@ export const useSubTasks = () => {
 
   /* actions */
   const fetchSubTasks = useCallback(async (): Promise<void> => {
-    const currentDate = new Date();
-    const subTasksData: SubTask[] = [
-      {
-        id: "1",
-        start: currentDate,
-        end: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 1
-        ),
-        title: "Skyscannerで探す",
-        parentTask: "航空券取る",
-        status: "Done",
-        memo: "テスト",
-      },
-      {
-        id: "2",
-        start: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 1
-        ),
-        end: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 2
-        ),
-        title: "予約する",
-        parentTask: "航空券取る",
-        status: "In Review",
-        memo: "テスト",
-      },
-      {
-        id: "3",
-        start: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 3
-        ),
-        end: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 4
-        ),
-        title: "Q-CODEを入力する",
-        parentTask: "韓国に旅行する",
-        status: "In Progress",
-        memo: "テスト",
-      },
-      {
-        id: "4",
-        start: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 4
-        ),
-        end: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 5
-        ),
-        title: "カジノで大勝ちする",
-        parentTask: "韓国に旅行する",
-        status: "Todo",
-        memo: "テスト",
-      },
-      {
-        id: "5",
-        start: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 5
-        ),
-        end: new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() + 6
-        ),
-        title: "サムギョプサルを食べる",
-        parentTask: "韓国に旅行する",
-        status: "Todo",
-        memo: "テスト",
-      },
-    ];
-    setSubTasks(subTasksData);
+    let currentSubTasks: SubTask[] = [];
+    const documentData = query(collection(db, "subTasks"));
+    await getDocs(documentData).then((q) => {
+      // cloudstoreにはtimestampで保存されてしまうので、Date型への変換が必要
+      currentSubTasks = q.docs.map((doc) => ({
+        id: doc.id,
+        title: doc.data().title,
+        start: doc.data().start.toDate(),
+        end: doc.data().end.toDate(),
+        parentTaskId: doc.data().parentTaskId,
+        parentTaskName: doc.data().parentTaskName,
+        status: doc.data().status,
+        memo: doc.data().memo,
+      }));
+    });
+    setSubTasks(currentSubTasks);
   }, []);
+
+  /* create */
+  const createSubTask = useCallback(
+    async (subTask: SubTask): Promise<void> => {
+      const { title, start, end, parentTaskId, parentTaskName, status, memo } =
+        subTask;
+      // DB登録
+      const tasksCollectionRef = collection(db, "subTasks");
+      const documentRef = await addDoc(tasksCollectionRef, {
+        title,
+        start,
+        end,
+        parentTaskId,
+        parentTaskName,
+        status,
+        memo,
+      });
+      // 追加情報をstateに反映
+      const newSubTasks: SubTask[] = [
+        ...subTasks,
+        {
+          id: documentRef.id,
+          title,
+          start,
+          end,
+          parentTaskId,
+          parentTaskName,
+          status,
+          memo,
+        },
+      ];
+      setSubTasks(newSubTasks);
+    },
+    [subTasks]
+  );
+
+  /* delete */
+  const deleteSubTask = useCallback(async (): Promise<void> => {}, []);
+  /* update */
+  const updateSubTask = useCallback(async (): Promise<void> => {}, []);
 
   useEffect(() => {
     fetchSubTasks();
@@ -100,5 +73,8 @@ export const useSubTasks = () => {
 
   return {
     subTasks,
+    createSubTask,
+    deleteSubTask,
+    updateSubTask,
   };
 };

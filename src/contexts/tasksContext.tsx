@@ -1,4 +1,5 @@
 import { createContext, FC, ReactNode, useContext } from "react";
+import { CreateTaskDto } from "../hooks/dto/create-task.dto";
 import { useSubTasks } from "../hooks/useSubTasks";
 import { useTasks } from "../hooks/useTasks";
 import { SubTask } from "../types/sub-task";
@@ -10,7 +11,13 @@ type Props = {
 
 type ContextType = {
   tasks: Task[];
+  createTask: (createTaskDto: CreateTaskDto) => Promise<string>;
+  deleteTask: () => Promise<void>;
+  updateTask: () => Promise<void>;
   subTasks: SubTask[];
+  createSubTask: (subTask: SubTask) => Promise<void>;
+  deleteSubTask: () => Promise<void>;
+  updateSubTask: () => Promise<void>;
 };
 
 export const TasksContext = createContext({} as ContextType);
@@ -21,10 +28,22 @@ export const TasksContext = createContext({} as ContextType);
  */
 export const TasksProvider: FC<Props> = ({ children }) => {
   // カスタムフックから状態とロジックを呼び出してコンテキストプロバイダーにあてがう
-  const { tasks } = useTasks();
-  const { subTasks } = useSubTasks();
+  const { tasks, createTask, deleteTask, updateTask } = useTasks();
+  const { subTasks, createSubTask, deleteSubTask, updateSubTask } =
+    useSubTasks();
   return (
-    <TasksContext.Provider value={{ tasks, subTasks }}>
+    <TasksContext.Provider
+      value={{
+        tasks,
+        createTask,
+        deleteTask,
+        updateTask,
+        subTasks,
+        createSubTask,
+        deleteSubTask,
+        updateSubTask,
+      }}
+    >
       {children}
     </TasksContext.Provider>
   );

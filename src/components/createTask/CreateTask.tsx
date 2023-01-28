@@ -13,6 +13,8 @@ import styles from "../detailTask/DetailTask.module.css";
 import { convertDateToJST } from "../../util/convertDateToJST";
 import SubTaskList from "./subTask/SubTaskList";
 import { SubTask } from "../../types/sub-task";
+import { useTasksContext } from "../../contexts/tasksContext";
+import { CreateTaskDto } from "../../hooks/dto/create-task.dto";
 
 type Props = {
   showFlag: Boolean;
@@ -27,6 +29,8 @@ const CreateTask: React.FC<Props> = ({
   start,
   end,
 }) => {
+  // 追加関数をcontextから取得
+  const { createTask, createSubTask } = useTasksContext();
   // 親タスク
   const [title, setTitle] = useState("");
   const [startValue, setStartValue] = useState<Date | null>(null);
@@ -44,8 +48,9 @@ const CreateTask: React.FC<Props> = ({
         title: "",
         start,
         end,
-        // 登録時、まとめて代入する
-        parentTask: "",
+        // 親タスクは、登録時まとめて代入する
+        parentTaskId: "",
+        parentTaskName: "",
         status: "Todo",
         memo: "",
       },
@@ -54,12 +59,38 @@ const CreateTask: React.FC<Props> = ({
   const closeModal = () => {
     setShowModal(false);
   };
-  const registerNewTask = (e: { preventDefault: () => void }) => {
+  const registerNewTask = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log("--親タスク--");
-    console.log(title, startValue, endValue, status, memo);
-    console.log("--子タスク--");
-    console.log(subTasks);
+    // 親タスクを登録
+    const createTaskDto: CreateTaskDto = {
+      title,
+      start: startValue || new Date(),
+      end: endValue || new Date(),
+      status,
+      memo,
+    };
+    const newTaskId = await createTask(createTaskDto);
+    // 子タスクを登録（複数存在する場合があるので配列処理で実施）
+    const createSubTasks = (subTasksEntity: SubTask[]) => {
+      subTasksEntity.map(async (value) => {
+        // ここで、親タスクの設定を行う
+        const { id, start, end, status, memo } = value;
+        const subTask: SubTask = {
+          id,
+          title: value.title,
+          start,
+          end,
+          parentTaskId: newTaskId,
+          parentTaskName: title,
+          status,
+          memo,
+        };
+        await createSubTask(subTask);
+      });
+    };
+    createSubTasks(subTasks);
+    alert("タスクの登録が完了しました！");
+    closeModal();
   };
   return (
     <>

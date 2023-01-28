@@ -9,9 +9,7 @@ export const getWeeklyTasks = (
 ): WeeklyTask[] => {
   const weeklyTasks: WeeklyTask[] = subTasks.map((subTask) => {
     // 紐付く親タスクを取得する
-    const myParentTask = tasks.find(
-      (task) => task.title === subTask.parentTask
-    );
+    const myParentTask = tasks.find((task) => task.id === subTask.parentTaskId);
     // 紐付く親タスクがない場合、異常なのでエラー
     if (myParentTask == null)
       throw new Error("親子タスクの紐付けを確認できませんでした。");

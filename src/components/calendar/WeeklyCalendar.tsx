@@ -9,10 +9,15 @@ import DetailTask from "../detailTask/DetailTask";
 import { getWeeklyTasks } from "../../function/getWeeklyTasks";
 import { useTasksContext } from "../../contexts/tasksContext";
 import CreateTask from "../createTask/CreateTask";
+import { WeeklyTask } from "../../types/weekly-task";
 
 const WeeklyCalendar: React.FC = () => {
   const { tasks, subTasks } = useTasksContext();
-  const weeklyTasks = getWeeklyTasks(tasks, subTasks);
+  // 空の場合、計算しない
+  let weeklyTasks: WeeklyTask[] = [];
+  if (tasks.length !== 0 && subTasks.length !== 0) {
+    weeklyTasks = getWeeklyTasks(tasks, subTasks);
+  }
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
@@ -29,13 +34,14 @@ const WeeklyCalendar: React.FC = () => {
   }, []);
   const handleEventClick = useCallback(
     (arg: EventClickArg) => {
-      // 選択した子タスクの親タスクを取得
+      // 選択した子タスクを取得
       const selectedTask = subTasks.find(
         (subTask) => subTask.id === arg.event.id
       );
       if (selectedTask == null)
         throw new Error("選択した子タスクを確認できませんでした。");
-      setSelectedTitle(selectedTask.parentTask);
+      // 選択した子タスクの親タスク名をセット
+      setSelectedTitle(selectedTask.parentTaskId);
       setShowDetail(true);
     },
     [subTasks]
