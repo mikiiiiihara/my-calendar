@@ -35,14 +35,14 @@ const DetailTask: React.FC<Props> = ({
       toDeleteSubTasks.map(async (subTask) => await deleteSubTask(subTask.id));
     };
     executeDeleteSubTask(subTasks);
-    setSelectedTitle("");
+    // setSelectedTitle("");
+    closeModal();
     // 親を削除
     await deleteTask(parentTaskId);
     alert("タスクの削除が完了しました！");
-    closeModal();
   };
   // TODO: 更新処理
-  if (selectedTitle !== "" && selectedTitle !== undefined) {
+  if (showFlag && selectedTitle !== "" && selectedTitle !== undefined) {
     const selectedTask = tasks.find((task) => task.id === selectedTitle);
     // 選択した親タスクがない場合、アラート出す
     if (selectedTask == null)

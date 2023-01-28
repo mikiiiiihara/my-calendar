@@ -35,13 +35,25 @@ export const useSubTasks = () => {
   }, []);
 
   /* create */
-  const createSubTask = useCallback(
-    async (subTask: SubTask): Promise<void> => {
-      const { title, start, end, parentTaskId, parentTaskName, status, memo } =
-        subTask;
-      // DB登録
-      const tasksCollectionRef = collection(db, "subTasks");
-      const documentRef = await addDoc(tasksCollectionRef, {
+  const createSubTask = async (subTask: SubTask): Promise<void> => {
+    const { title, start, end, parentTaskId, parentTaskName, status, memo } =
+      subTask;
+    // DB登録
+    const tasksCollectionRef = collection(db, "subTasks");
+    const documentRef = await addDoc(tasksCollectionRef, {
+      title,
+      start,
+      end,
+      parentTaskId,
+      parentTaskName,
+      status,
+      memo,
+    });
+    // 追加情報をstateに反映
+    const newSubTasks: SubTask[] = [
+      ...subTasks,
+      {
+        id: documentRef.id,
         title,
         start,
         end,
@@ -49,25 +61,11 @@ export const useSubTasks = () => {
         parentTaskName,
         status,
         memo,
-      });
-      // 追加情報をstateに反映
-      const newSubTasks: SubTask[] = [
-        ...subTasks,
-        {
-          id: documentRef.id,
-          title,
-          start,
-          end,
-          parentTaskId,
-          parentTaskName,
-          status,
-          memo,
-        },
-      ];
-      setSubTasks(newSubTasks);
-    },
-    [subTasks]
-  );
+      },
+    ];
+    setSubTasks(newSubTasks);
+    console.log(subTasks);
+  };
 
   /* delete */
   const deleteSubTask = useCallback(
