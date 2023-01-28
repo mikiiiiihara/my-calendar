@@ -1,4 +1,4 @@
-import { TextField } from "@material-ui/core";
+import { Button, Grid, TextField } from "@material-ui/core";
 import Stack from "@mui/material/Stack";
 import React from "react";
 import { useTasksContext } from "../../contexts/tasksContext";
@@ -143,9 +143,23 @@ const DetailTask: React.FC<Props> = ({
                   )}
                 </ul>
               </div>
-              <button onClick={closeModal} className="btn-secondary">
-                Close
-              </button>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="center"
+                direction="column"
+              >
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    style={{ width: 300, marginTop: 10 }}
+                    onClick={closeModal}
+                  >
+                    Close
+                  </Button>
+                </Grid>
+              </Grid>
             </div>
           </div>
         ) : (
