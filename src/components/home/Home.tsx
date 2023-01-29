@@ -8,10 +8,15 @@ const Home: React.FC = () => {
   const [displayType, setDisplayType] = useState<DisplayType>(
     DISPLAY_TYPE.weekly
   );
+  const signOut = () => {
+    if (window.confirm("ログアウトしますか？")) {
+      auth.signOut();
+    }
+  };
   return (
     <div>
       <div className="nav">
-        <button className="nav-button" onClick={() => auth.signOut()}>
+        <button className="nav-button" onClick={signOut}>
           Logout
         </button>
         <button
