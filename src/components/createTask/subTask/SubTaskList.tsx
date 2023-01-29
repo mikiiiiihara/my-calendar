@@ -19,6 +19,7 @@ type Props = {
   parentTaskEnd: Date;
   parentTaskId: string;
   parentTaskName: string;
+  isRegistered: boolean;
 };
 
 const SubTaskList: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const SubTaskList: React.FC<Props> = ({
   parentTaskEnd,
   parentTaskId,
   parentTaskName,
+  isRegistered,
 }) => {
   // 追加関数をcontextから取得
   const { createSubTask } = useTasksContext();
@@ -113,9 +115,13 @@ const SubTaskList: React.FC<Props> = ({
   return (
     <>
       <h2>Create Sub Tasks</h2>
-      <button className="add-button" onClick={addSubTaskDisplay}>
-        Add Sub Task
-      </button>
+      {isRegistered ? (
+        <button className="add-button" onClick={addSubTaskDisplay}>
+          Add Sub Task
+        </button>
+      ) : (
+        <></>
+      )}
       <ul>
         {subTasks ? (
           subTasks.map((subTask) => (

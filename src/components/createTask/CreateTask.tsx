@@ -184,6 +184,7 @@ const CreateTask: React.FC<Props> = ({
                 parentTaskEnd={endValue || new Date()}
                 parentTaskId={parentTaskId}
                 parentTaskName={parentTaskName}
+                isRegistered={isRegistered}
               />
             </div>
             <Grid
