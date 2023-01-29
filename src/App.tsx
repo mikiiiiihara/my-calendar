@@ -8,6 +8,7 @@ import Auth from "./components/auth/Auth";
 import Home from "./components/home/Home";
 
 const App: React.FC = () => {
+  // セッションからユーザー情報を取得
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
