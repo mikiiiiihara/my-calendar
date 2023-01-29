@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { Task } from "../types/task";
 import { CreateTaskDto } from "./dto/create-task.dto";
 
@@ -18,7 +18,17 @@ export const useTasks = () => {
 
   /* actions */
   const fetchTasks = useCallback(async (): Promise<void> => {
+    // ユーザー情報取得
+    let myId = "";
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // ログインしていれば中通る
+        myId = user.uid;
+      }
+    });
+    console.log(myId);
     let currentTasks: Task[] = [];
+    // TODO: ログインしているユーザーのuidで絞る
     const documentData = query(collection(db, "tasks"));
     await getDocs(documentData).then((q) => {
       // cloudstoreにはtimestampで保存されてしまうので、Date型への変換が必要
@@ -29,6 +39,7 @@ export const useTasks = () => {
         end: doc.data().end.toDate(),
         status: doc.data().status,
         memo: doc.data().memo,
+        userId: doc.data().userId,
       }));
     });
     setTasks(currentTasks);
@@ -36,7 +47,7 @@ export const useTasks = () => {
   /* create(成功した場合、新規登録したデータのIDを返却する) */
   const createTask = useCallback(
     async (createTaskDto: CreateTaskDto): Promise<string> => {
-      const { title, start, end, status, memo } = createTaskDto;
+      const { title, start, end, status, memo, userId } = createTaskDto;
       // DB登録
       const tasksCollectionRef = collection(db, "tasks");
       const documentRef = await addDoc(tasksCollectionRef, {
@@ -45,11 +56,12 @@ export const useTasks = () => {
         end,
         status,
         memo,
+        userId,
       });
       // 追加情報をstateに反映
       const newTasks: Task[] = [
         ...tasks,
-        { id: documentRef.id, title, start, end, status, memo },
+        { id: documentRef.id, title, start, end, status, memo, userId },
       ];
       setTasks(newTasks);
       return documentRef.id;

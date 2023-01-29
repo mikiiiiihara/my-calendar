@@ -30,6 +30,7 @@ export const useSubTasks = () => {
         parentTaskName: doc.data().parentTaskName,
         status: doc.data().status,
         memo: doc.data().memo,
+        userId: doc.data().userId,
       }));
     });
     setSubTasks(currentSubTasks);
@@ -38,8 +39,16 @@ export const useSubTasks = () => {
   /* create(single data) */
   const createSubTask = useCallback(
     async (subTask: SubTask): Promise<void> => {
-      const { title, start, end, parentTaskId, parentTaskName, status, memo } =
-        subTask;
+      const {
+        title,
+        start,
+        end,
+        parentTaskId,
+        parentTaskName,
+        status,
+        memo,
+        userId,
+      } = subTask;
       // DB登録
       const tasksCollectionRef = collection(db, "subTasks");
       const documentRef = await addDoc(tasksCollectionRef, {
@@ -50,6 +59,7 @@ export const useSubTasks = () => {
         parentTaskName,
         status,
         memo,
+        userId,
       });
       // 追加情報をstateに反映
       const newSubTasks: SubTask[] = [
@@ -63,6 +73,7 @@ export const useSubTasks = () => {
           parentTaskName,
           status,
           memo,
+          userId,
         },
       ];
       setSubTasks(newSubTasks);

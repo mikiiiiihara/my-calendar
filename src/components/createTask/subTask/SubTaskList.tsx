@@ -9,7 +9,9 @@ import {
 } from "@material-ui/core";
 import Stack from "@mui/material/Stack";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useTasksContext } from "../../../contexts/tasksContext";
+import { selectUser } from "../../../features/userSlice";
 import { SubTask } from "../../../types/sub-task";
 import { convertDateToJST } from "../../../util/convertDateToJST";
 
@@ -32,6 +34,8 @@ const SubTaskList: React.FC<Props> = ({
 }) => {
   // 追加関数をcontextから取得
   const { createSubTask } = useTasksContext();
+  // セッションからユーザー情報を取得
+  const { uid } = useSelector(selectUser);
   // 連番管理用
   const [count, setCount] = useState(2);
   // 子タスク
@@ -57,6 +61,7 @@ const SubTaskList: React.FC<Props> = ({
         parentTaskName: "",
         status: "Todo",
         memo: "",
+        userId: uid,
       },
     ]);
     setCount(count + 1);
@@ -90,6 +95,7 @@ const SubTaskList: React.FC<Props> = ({
         memo,
         parentTaskId,
         parentTaskName,
+        userId: uid,
       };
       await createSubTask(newSubTask);
       // 登録したことを画面側で認識するために、stateに反映する
@@ -109,9 +115,10 @@ const SubTaskList: React.FC<Props> = ({
         parentTaskName: "",
         status: "Todo",
         memo: "",
+        userId: uid,
       },
     ]);
-  }, [parentEnd, parentStart]);
+  }, [parentEnd, parentStart, uid]);
   return (
     <>
       <h2>Create Sub Tasks</h2>
@@ -148,6 +155,7 @@ const SubTaskList: React.FC<Props> = ({
                         parentTaskName,
                         status,
                         memo,
+                        userId,
                       } = subTask;
                       if (value.id === id)
                         return {
@@ -159,6 +167,7 @@ const SubTaskList: React.FC<Props> = ({
                           parentTaskName,
                           status,
                           memo,
+                          userId,
                         };
                       return value;
                     });
@@ -185,6 +194,7 @@ const SubTaskList: React.FC<Props> = ({
                           parentTaskName,
                           status,
                           memo,
+                          userId,
                         } = subTask;
                         if (value.id === id)
                           return {
@@ -196,6 +206,7 @@ const SubTaskList: React.FC<Props> = ({
                             parentTaskName,
                             status,
                             memo,
+                            userId,
                           };
                         return value;
                       });
@@ -222,6 +233,7 @@ const SubTaskList: React.FC<Props> = ({
                           parentTaskName,
                           status,
                           memo,
+                          userId,
                         } = subTask;
                         if (value.id === id)
                           return {
@@ -233,6 +245,7 @@ const SubTaskList: React.FC<Props> = ({
                             parentTaskName,
                             status,
                             memo,
+                            userId,
                           };
                         return value;
                       });
@@ -257,6 +270,7 @@ const SubTaskList: React.FC<Props> = ({
                           parentTaskId,
                           parentTaskName,
                           memo,
+                          userId,
                         } = subTask;
                         if (value.id === id)
                           return {
@@ -268,6 +282,7 @@ const SubTaskList: React.FC<Props> = ({
                             parentTaskName,
                             status: e.target.value as string,
                             memo,
+                            userId,
                           };
                         return value;
                       });
@@ -299,6 +314,7 @@ const SubTaskList: React.FC<Props> = ({
                         parentTaskId,
                         parentTaskName,
                         status,
+                        userId,
                       } = subTask;
                       if (value.id === id)
                         return {
@@ -310,6 +326,7 @@ const SubTaskList: React.FC<Props> = ({
                           parentTaskName,
                           status,
                           memo: e.target.value,
+                          userId,
                         };
                       return value;
                     });

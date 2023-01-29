@@ -9,7 +9,9 @@ import {
 } from "@material-ui/core";
 import { Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useTasksContext } from "../../../contexts/tasksContext";
+import { selectUser } from "../../../features/userSlice";
 import { SubTask } from "../../../types/sub-task";
 import { convertDateToJST } from "../../../util/convertDateToJST";
 
@@ -20,6 +22,8 @@ type Props = {
 
 const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
   const { updateSubTask, deleteSubTask } = useTasksContext();
+  // セッションからユーザー情報を取得
+  const { uid } = useSelector(selectUser);
   // 画面項目
   const [title, setTitle] = useState("");
   const [startValue, setStartValue] = useState<Date | null>(null);
@@ -42,6 +46,7 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
       parentTaskId,
       parentTaskName,
       memo,
+      userId: uid,
     };
     await updateSubTask(newSubtask);
     alert(`タスク「${title}」の更新が完了しました！`);

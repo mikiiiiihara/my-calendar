@@ -7,4 +7,5 @@ export type SubTask = {
   parentTaskName: string;
   status: string;
   memo: string;
+  userId: string;
 };

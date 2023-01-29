@@ -4,4 +4,5 @@ export type CreateTaskDto = {
   end: Date;
   status: string;
   memo: string;
+  userId: string;
 };

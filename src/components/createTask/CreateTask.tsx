@@ -14,6 +14,8 @@ import { convertDateToJST } from "../../util/convertDateToJST";
 import SubTaskList from "./subTask/SubTaskList";
 import { useTasksContext } from "../../contexts/tasksContext";
 import { CreateTaskDto } from "../../hooks/dto/create-task.dto";
+import { selectUser } from "../../features/userSlice";
+import { useSelector } from "react-redux";
 
 type Props = {
   showFlag: Boolean;
@@ -30,6 +32,8 @@ const CreateTask: React.FC<Props> = ({
 }) => {
   // 追加関数をcontextから取得
   const { createTask } = useTasksContext();
+  // セッションからユーザー情報を取得
+  const { uid } = useSelector(selectUser);
   // 画面項目
   const [title, setTitle] = useState("");
   const [startValue, setStartValue] = useState<Date | null>(null);
@@ -64,6 +68,7 @@ const CreateTask: React.FC<Props> = ({
       end: endValue || new Date(),
       status,
       memo,
+      userId: uid,
     };
     const newParentTaskId = await createTask(createTaskDto);
     // 親タスク登録後、連続して子タスクを追加できるように、親タスクIdを保持する

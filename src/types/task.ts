@@ -5,4 +5,5 @@ export type Task = {
   end: Date;
   status: string;
   memo: string;
+  userId: string;
 };
