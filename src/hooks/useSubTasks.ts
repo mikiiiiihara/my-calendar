@@ -109,8 +109,6 @@ export const useSubTasks = () => {
       // 新規登録するサブタスクリストをstateに反映する
       const result = [...subTasks, ...newSubTasks];
       setSubTasks(result);
-      console.log(newSubTasks);
-      console.log(subTasks);
     },
     [subTasks]
   );
