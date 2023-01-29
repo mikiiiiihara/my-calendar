@@ -5,6 +5,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { db } from "../firebase";
@@ -79,7 +80,38 @@ export const useSubTasks = () => {
     [subTasks]
   );
   /* update */
-  const updateSubTask = useCallback(async (): Promise<void> => {}, []);
+  const updateSubTask = useCallback(
+    async (subTask: SubTask): Promise<void> => {
+      const {
+        id,
+        title,
+        start,
+        end,
+        parentTaskId,
+        parentTaskName,
+        status,
+        memo,
+      } = subTask;
+      const userDocumentRef = doc(db, "subTasks", id);
+      await updateDoc(userDocumentRef, {
+        title,
+        start,
+        end,
+        parentTaskId,
+        parentTaskName,
+        status,
+        memo,
+      });
+      // 更新情報をstateに反映
+      const newSubTasks: SubTask[] = subTasks.map((newSubTask) => {
+        if (newSubTask.id === id) return subTask;
+        return newSubTask;
+      });
+      console.log(newSubTasks);
+      setSubTasks(newSubTasks);
+    },
+    [subTasks]
+  );
 
   useEffect(() => {
     fetchSubTasks();

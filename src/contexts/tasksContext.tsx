@@ -17,7 +17,7 @@ type ContextType = {
   subTasks: SubTask[];
   createSubTask: (subTask: SubTask) => Promise<void>;
   deleteSubTask: (id: string) => Promise<void>;
-  updateSubTask: () => Promise<void>;
+  updateSubTask: (subTask: SubTask) => Promise<void>;
 };
 
 export const TasksContext = createContext({} as ContextType);

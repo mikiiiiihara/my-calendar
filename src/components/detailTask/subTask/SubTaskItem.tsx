@@ -1,4 +1,12 @@
-import { Button, Grid, TextField } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
 import { Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTasksContext } from "../../../contexts/tasksContext";
@@ -11,7 +19,7 @@ type Props = {
 };
 
 const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
-  const { updateTask, deleteSubTask } = useTasksContext();
+  const { updateSubTask, deleteSubTask } = useTasksContext();
   // 画面項目
   const [title, setTitle] = useState("");
   const [startValue, setStartValue] = useState<Date | null>(null);
@@ -35,7 +43,8 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
       parentTaskName,
       memo,
     };
-    console.log(newSubtask);
+    await updateSubTask(newSubtask);
+    alert(`タスク「${title}」の更新が完了しました！`);
   };
   // 子タスク削除処理
   const executeDeleteSubTask = async (subTask: SubTask) => {
@@ -119,18 +128,23 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
             style={{ width: 200 }}
           />
         </Stack>
-        <TextField
-          margin="normal"
-          disabled={!isEditMode}
-          id="Status"
-          label="Status"
-          name="Status"
-          autoComplete="Status"
-          autoFocus
-          value={status}
-          onChange={(e) => setStatus(e.target.value as string)}
-          style={{ width: 200 }}
-        />
+        <FormControl>
+          <InputLabel id="Status">Status</InputLabel>
+          <Select
+            disabled={!isEditMode}
+            labelId="Status"
+            id="Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value as string)}
+            label="Status"
+            style={{ width: 200 }}
+          >
+            <MenuItem value={"Todo"}>Todo</MenuItem>
+            <MenuItem value={"In Progress"}>In Progress</MenuItem>
+            <MenuItem value={"In Review"}>In Review</MenuItem>
+            <MenuItem value={"Done"}>Done</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           id="Memo"
           value={memo}
