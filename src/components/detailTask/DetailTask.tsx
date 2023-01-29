@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import React from "react";
 import { useTasksContext } from "../../contexts/tasksContext";
 import { SubTask } from "../../types/sub-task";
+import { Task } from "../../types/task";
 import { convertDateToJST } from "../../util/convertDateToJST";
 import styles from "./DetailTask.module.css";
 
@@ -23,22 +24,31 @@ const DetailTask: React.FC<Props> = ({
   const closeModal = () => {
     setShowModal(false);
   };
-  // 削除処理
-  const executeDeleteTask = async (parentTaskId: string) => {
-    // 子を最初に削除(そうしないと子に紐付く親がなくなってしまうため)
-    const executeDeleteSubTask = (subTasks: SubTask[]) => {
-      // 削除したい親タスクのIdを持つ子タスクを抽出
-      const toDeleteSubTasks = subTasks.filter(
-        (subTask) => subTask.parentTaskId === parentTaskId
-      );
-      toDeleteSubTasks.map(async (subTask) => await deleteSubTask(subTask.id));
-    };
-    executeDeleteSubTask(subTasks);
-    // setSelectedTitle("");
-    closeModal();
-    // 親を削除
-    await deleteTask(parentTaskId);
-    alert("タスクの削除が完了しました！");
+  // 親タスク削除処理
+  const executeDeleteTask = async (parentTask: Task) => {
+    if (window.confirm(`「${parentTask.title}」のtodoを削除しますか？`)) {
+      // 子を最初に削除(そうしないと子に紐付く親がなくなってしまうため)
+      const executeDeleteSubTask = (subTasks: SubTask[]) => {
+        // 削除したい親タスクのIdを持つ子タスクを抽出
+        const toDeleteSubTasks = subTasks.filter(
+          (subTask) => subTask.parentTaskId === parentTask.id
+        );
+        toDeleteSubTasks.map(
+          async (subTask) => await deleteSubTask(subTask.id)
+        );
+      };
+      executeDeleteSubTask(subTasks);
+      // setSelectedTitle("");
+      closeModal();
+      await deleteTask(parentTask.id);
+    }
+  };
+
+  // 子タスク削除処理
+  const executeDeleteSubTask = async (subTask: SubTask) => {
+    if (window.confirm(`「${subTask.title}」のtodoを削除しますか？`)) {
+      await deleteSubTask(subTask.id);
+    }
   };
   // TODO: 更新処理
   if (showFlag && parentTitle !== "" && parentTitle !== undefined) {
@@ -54,7 +64,6 @@ const DetailTask: React.FC<Props> = ({
       if (a.start > b.start) return 1;
       return 0;
     });
-    console.log(selectedSubTasks);
     return (
       <>
         {showFlag ? ( // showFlagがtrueだったらModalを表示する
@@ -62,22 +71,26 @@ const DetailTask: React.FC<Props> = ({
             <div className={styles.card}>
               <div className={styles.content}>
                 <h1>{selectedTask.title}</h1>
-                <Grid
-                  container
-                  alignItems="flex-end"
-                  justifyContent="flex-end"
-                  direction="column"
-                >
-                  <Grid item xs={12}>
-                    <Button
-                      variant="contained"
-                      color="inherit"
-                      onClick={() => executeDeleteTask(selectedTask.id)}
-                    >
-                      削除
-                    </Button>
+                {selectedSubTasks.length === 0 ? (
+                  <Grid
+                    container
+                    alignItems="flex-end"
+                    justifyContent="flex-end"
+                    direction="column"
+                  >
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="inherit"
+                        onClick={() => executeDeleteTask(selectedTask)}
+                      >
+                        削除
+                      </Button>
+                    </Grid>
                   </Grid>
-                </Grid>
+                ) : (
+                  <></>
+                )}
                 <Stack direction="row" component="form" noValidate spacing={3}>
                   <TextField
                     disabled={true}
@@ -129,6 +142,22 @@ const DetailTask: React.FC<Props> = ({
                     selectedSubTasks.map((subTask) => (
                       <li key={subTask.id}>
                         <h2>{subTask.title}</h2>
+                        <Grid
+                          container
+                          alignItems="flex-end"
+                          justifyContent="flex-end"
+                          direction="column"
+                        >
+                          <Grid item xs={12}>
+                            <Button
+                              variant="contained"
+                              color="inherit"
+                              onClick={() => executeDeleteSubTask(subTask)}
+                            >
+                              削除
+                            </Button>
+                          </Grid>
+                        </Grid>
                         <Stack
                           direction="row"
                           component="form"

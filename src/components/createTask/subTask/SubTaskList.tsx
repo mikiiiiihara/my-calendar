@@ -338,23 +338,27 @@ const SubTaskList: React.FC<Props> = ({
                     ) : (
                       <></>
                     )}
-                    <Grid
-                      container
-                      alignItems="center"
-                      justifyContent="center"
-                      direction="column"
-                    >
-                      <Grid item xs={12}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          style={{ width: 300 }}
-                          type="submit"
-                        >
-                          子タスク登録
-                        </Button>
+                    {parentTaskId !== "" ? (
+                      <Grid
+                        container
+                        alignItems="center"
+                        justifyContent="center"
+                        direction="column"
+                      >
+                        <Grid item xs={12}>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ width: 300 }}
+                            type="submit"
+                          >
+                            子タスク登録
+                          </Button>
+                        </Grid>
                       </Grid>
-                    </Grid>
+                    ) : (
+                      <></>
+                    )}
                   </>
                 )}
               </form>

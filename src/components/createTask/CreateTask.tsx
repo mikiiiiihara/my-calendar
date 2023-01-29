@@ -7,7 +7,7 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import styles from "../detailTask/DetailTask.module.css";
 import { convertDateToJST } from "../../util/convertDateToJST";
@@ -39,13 +39,22 @@ const CreateTask: React.FC<Props> = ({
   // 親タスク新規登録後、レンダリングせずに子タスク追加できるように、親タスクID,Nameを保持する
   const [parentTaskId, setParentTaskId] = useState("");
   const [parentTaskName, setParentTaskName] = useState("");
+  // 登録後継続して子タスク追加する際、親タスクを追加できないようにするための関数
+  const [isRegistered, setIsRegistered] = useState(false);
   useEffect(() => {
     setStartValue(start);
     setEndValue(end);
   }, [end, start]);
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
+    // モーダルが閉じられるたびに状態管理変数を初期化
+    setTitle("");
+    setStatus("");
+    setMemo("");
+    setParentTaskId("");
+    setParentTaskName("");
+    setIsRegistered(false);
     setShowModal(false);
-  };
+  }, [setShowModal]);
   const registerNewTask = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     // 親タスクを登録
@@ -60,22 +69,7 @@ const CreateTask: React.FC<Props> = ({
     // 親タスク登録後、連続して子タスクを追加できるように、親タスクIdを保持する
     setParentTaskId(newParentTaskId);
     setParentTaskName(title);
-    // const newParentTaskId = await createTask(createTaskDto);
-    // // 子タスクを一括登録
-    // const resisterNenTasksDto: SubTask[] = subTasks.map((subTask) => {
-    //   const { id, start, end, status, memo } = subTask;
-    //   return {
-    //     id,
-    //     title: subTask.title,
-    //     start,
-    //     end,
-    //     parentTaskId: newParentTaskId,
-    //     parentTaskName: title,
-    //     status,
-    //     memo,
-    //   };
-    // });
-    // await createSubTasks(resisterNenTasksDto);
+    setIsRegistered(true);
     alert("親タスクの登録が完了しました！");
   };
 
@@ -162,23 +156,27 @@ const CreateTask: React.FC<Props> = ({
                   variant="outlined"
                   style={{ marginTop: "20px" }}
                 />
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="center"
-                  direction="column"
-                >
-                  <Grid item xs={12}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ width: 300 }}
-                      type="submit"
-                    >
-                      親タスク登録
-                    </Button>
+                {isRegistered ? (
+                  <></>
+                ) : (
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="center"
+                    direction="column"
+                  >
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ width: 300 }}
+                        type="submit"
+                      >
+                        親タスク登録
+                      </Button>
+                    </Grid>
                   </Grid>
-                </Grid>
+                )}
               </form>
               <SubTaskList
                 parentStart={startValue || new Date()}
