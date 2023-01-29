@@ -12,7 +12,6 @@ import Stack from "@mui/material/Stack";
 import styles from "../detailTask/DetailTask.module.css";
 import { convertDateToJST } from "../../util/convertDateToJST";
 import SubTaskList from "./subTask/SubTaskList";
-import { SubTask } from "../../types/sub-task";
 import { useTasksContext } from "../../contexts/tasksContext";
 import { CreateTaskDto } from "../../hooks/dto/create-task.dto";
 
@@ -30,31 +29,19 @@ const CreateTask: React.FC<Props> = ({
   end,
 }) => {
   // 追加関数をcontextから取得
-  const { createTask, createSubTasks } = useTasksContext();
-  // 親タスク
+  const { createTask } = useTasksContext();
+  // 画面項目
   const [title, setTitle] = useState("");
   const [startValue, setStartValue] = useState<Date | null>(null);
   const [endValue, setEndValue] = useState<Date | null>(null);
   const [status, setStatus] = useState("");
   const [memo, setMemo] = useState("");
-  // 子タスク
-  const [subTasks, setSubTasks] = useState<SubTask[]>([]);
+  // 親タスク新規登録後、レンダリングせずに子タスク追加できるように、親タスクID,Nameを保持する
+  const [parentTaskId, setParentTaskId] = useState("");
+  const [parentTaskName, setParentTaskName] = useState("");
   useEffect(() => {
     setStartValue(start);
     setEndValue(end);
-    setSubTasks([
-      {
-        id: "1",
-        title: "",
-        start,
-        end,
-        // 親タスクは、登録時まとめて代入する
-        parentTaskId: "",
-        parentTaskName: "",
-        status: "Todo",
-        memo: "",
-      },
-    ]);
   }, [end, start]);
   const closeModal = () => {
     setShowModal(false);
@@ -70,23 +57,26 @@ const CreateTask: React.FC<Props> = ({
       memo,
     };
     const newParentTaskId = await createTask(createTaskDto);
-    // 子タスクを一括登録
-    const resisterNenTasksDto: SubTask[] = subTasks.map((subTask) => {
-      const { id, start, end, status, memo } = subTask;
-      return {
-        id,
-        title: subTask.title,
-        start,
-        end,
-        parentTaskId: newParentTaskId,
-        parentTaskName: title,
-        status,
-        memo,
-      };
-    });
-    await createSubTasks(resisterNenTasksDto);
-    alert("タスクの登録が完了しました！");
-    closeModal();
+    // 親タスク登録後、連続して子タスクを追加できるように、親タスクIdを保持する
+    setParentTaskId(newParentTaskId);
+    setParentTaskName(title);
+    // const newParentTaskId = await createTask(createTaskDto);
+    // // 子タスクを一括登録
+    // const resisterNenTasksDto: SubTask[] = subTasks.map((subTask) => {
+    //   const { id, start, end, status, memo } = subTask;
+    //   return {
+    //     id,
+    //     title: subTask.title,
+    //     start,
+    //     end,
+    //     parentTaskId: newParentTaskId,
+    //     parentTaskName: title,
+    //     status,
+    //     memo,
+    //   };
+    // });
+    // await createSubTasks(resisterNenTasksDto);
+    alert("親タスクの登録が完了しました！");
   };
 
   return (
@@ -172,11 +162,6 @@ const CreateTask: React.FC<Props> = ({
                   variant="outlined"
                   style={{ marginTop: "20px" }}
                 />
-                <SubTaskList
-                  parentTaskEnd={endValue || new Date()}
-                  subTasks={subTasks}
-                  setSubTasks={setSubTasks}
-                />
                 <Grid
                   container
                   alignItems="center"
@@ -190,11 +175,18 @@ const CreateTask: React.FC<Props> = ({
                       style={{ width: 300 }}
                       type="submit"
                     >
-                      登録
+                      親タスク登録
                     </Button>
                   </Grid>
                 </Grid>
               </form>
+              <SubTaskList
+                parentStart={startValue || new Date()}
+                parentEnd={endValue || new Date()}
+                parentTaskEnd={endValue || new Date()}
+                parentTaskId={parentTaskId}
+                parentTaskName={parentTaskName}
+              />
             </div>
             <Grid
               container
