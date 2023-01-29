@@ -1,6 +1,6 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import Stack from "@mui/material/Stack";
-import React, { useState } from "react";
+import React from "react";
 import { useTasksContext } from "../../contexts/tasksContext";
 import { SubTask } from "../../types/sub-task";
 import { convertDateToJST } from "../../util/convertDateToJST";
@@ -19,7 +19,6 @@ const DetailTask: React.FC<Props> = ({
   parentTitle,
 }) => {
   const { tasks, subTasks, deleteTask, deleteSubTask } = useTasksContext();
-  const [selectedTitle, setSelectedTitle] = useState(parentTitle);
 
   const closeModal = () => {
     setShowModal(false);
@@ -42,8 +41,8 @@ const DetailTask: React.FC<Props> = ({
     alert("タスクの削除が完了しました！");
   };
   // TODO: 更新処理
-  if (showFlag && selectedTitle !== "" && selectedTitle !== undefined) {
-    const selectedTask = tasks.find((task) => task.id === selectedTitle);
+  if (showFlag && parentTitle !== "" && parentTitle !== undefined) {
+    const selectedTask = tasks.find((task) => task.id === parentTitle);
     // 選択した親タスクがない場合、アラート出す
     if (selectedTask == null)
       throw new Error("親子タスクの紐付けを確認できませんでした。");
@@ -55,6 +54,7 @@ const DetailTask: React.FC<Props> = ({
       if (a.start > b.start) return 1;
       return 0;
     });
+    console.log(selectedSubTasks);
     return (
       <>
         {showFlag ? ( // showFlagがtrueだったらModalを表示する

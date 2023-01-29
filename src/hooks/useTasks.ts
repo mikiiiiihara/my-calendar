@@ -32,7 +32,6 @@ export const useTasks = () => {
     });
     setTasks(currentTasks);
   }, []);
-
   /* create(成功した場合、新規登録したデータのIDを返却する) */
   const createTask = useCallback(
     async (createTaskDto: CreateTaskDto): Promise<string> => {

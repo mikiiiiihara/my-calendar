@@ -16,6 +16,7 @@ type ContextType = {
   updateTask: () => Promise<void>;
   subTasks: SubTask[];
   createSubTask: (subTask: SubTask) => Promise<void>;
+  createSubTasks: (subTasks: SubTask[]) => Promise<void>;
   deleteSubTask: (id: string) => Promise<void>;
   updateSubTask: () => Promise<void>;
 };
@@ -29,8 +30,13 @@ export const TasksContext = createContext({} as ContextType);
 export const TasksProvider: FC<Props> = ({ children }) => {
   // カスタムフックから状態とロジックを呼び出してコンテキストプロバイダーにあてがう
   const { tasks, createTask, deleteTask, updateTask } = useTasks();
-  const { subTasks, createSubTask, deleteSubTask, updateSubTask } =
-    useSubTasks();
+  const {
+    subTasks,
+    createSubTask,
+    createSubTasks,
+    deleteSubTask,
+    updateSubTask,
+  } = useSubTasks();
   return (
     <TasksContext.Provider
       value={{
@@ -40,6 +46,7 @@ export const TasksProvider: FC<Props> = ({ children }) => {
         updateTask,
         subTasks,
         createSubTask,
+        createSubTasks,
         deleteSubTask,
         updateSubTask,
       }}

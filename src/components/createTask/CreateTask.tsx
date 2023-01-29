@@ -30,7 +30,7 @@ const CreateTask: React.FC<Props> = ({
   end,
 }) => {
   // 追加関数をcontextから取得
-  const { createTask, createSubTask } = useTasksContext();
+  const { createTask, createSubTasks } = useTasksContext();
   // 親タスク
   const [title, setTitle] = useState("");
   const [startValue, setStartValue] = useState<Date | null>(null);
@@ -69,29 +69,26 @@ const CreateTask: React.FC<Props> = ({
       status,
       memo,
     };
-    const newTaskId = await createTask(createTaskDto);
-    // 子タスクを登録（複数存在する場合があるので配列処理で実施）
-    const createSubTasks = (subTasksEntity: SubTask[]) => {
-      subTasksEntity.map(async (value) => {
-        // ここで、親タスクの設定を行う
-        const { id, start, end, status, memo } = value;
-        const subTask: SubTask = {
-          id,
-          title: value.title,
-          start,
-          end,
-          parentTaskId: newTaskId,
-          parentTaskName: title,
-          status,
-          memo,
-        };
-        await createSubTask(subTask);
-      });
-    };
-    createSubTasks(subTasks);
+    const newParentTaskId = await createTask(createTaskDto);
+    // 子タスクを一括登録
+    const resisterNenTasksDto: SubTask[] = subTasks.map((subTask) => {
+      const { id, start, end, status, memo } = subTask;
+      return {
+        id,
+        title: subTask.title,
+        start,
+        end,
+        parentTaskId: newParentTaskId,
+        parentTaskName: title,
+        status,
+        memo,
+      };
+    });
+    await createSubTasks(resisterNenTasksDto);
     alert("タスクの登録が完了しました！");
     closeModal();
   };
+
   return (
     <>
       {showFlag ? ( // showFlagがtrueだったらModalを表示する
