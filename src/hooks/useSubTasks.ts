@@ -107,7 +107,6 @@ export const useSubTasks = () => {
         if (newSubTask.id === id) return subTask;
         return newSubTask;
       });
-      console.log(newSubTasks);
       setSubTasks(newSubTasks);
     },
     [subTasks]

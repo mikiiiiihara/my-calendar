@@ -13,7 +13,7 @@ type ContextType = {
   tasks: Task[];
   createTask: (createTaskDto: CreateTaskDto) => Promise<string>;
   deleteTask: (id: string) => Promise<void>;
-  updateTask: () => Promise<void>;
+  updateTask: (task: Task) => Promise<void>;
   subTasks: SubTask[];
   createSubTask: (subTask: SubTask) => Promise<void>;
   deleteSubTask: (id: string) => Promise<void>;

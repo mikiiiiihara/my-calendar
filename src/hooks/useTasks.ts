@@ -5,6 +5,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { db } from "../firebase";
@@ -66,7 +67,26 @@ export const useTasks = () => {
     [tasks]
   );
   /* update */
-  const updateTask = useCallback(async (): Promise<void> => {}, []);
+  const updateTask = useCallback(
+    async (task: Task): Promise<void> => {
+      const { id, title, start, end, status, memo } = task;
+      const userDocumentRef = doc(db, "tasks", id);
+      await updateDoc(userDocumentRef, {
+        title,
+        start,
+        end,
+        status,
+        memo,
+      });
+      // 更新情報をstateに反映
+      const newTasks: Task[] = tasks.map((newTask) => {
+        if (newTask.id === id) return task;
+        return newTask;
+      });
+      setTasks(newTasks);
+    },
+    [tasks]
+  );
 
   useEffect(() => {
     fetchTasks();

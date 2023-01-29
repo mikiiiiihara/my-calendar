@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import Stack from "@mui/material/Stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTasksContext } from "../../contexts/tasksContext";
 import { SubTask } from "../../types/sub-task";
 import { Task } from "../../types/task";
@@ -28,7 +28,14 @@ const DetailTask: React.FC<Props> = ({
   setShowModal,
   parentTitle,
 }) => {
-  const { tasks, subTasks, deleteTask, deleteSubTask } = useTasksContext();
+  const { tasks, subTasks, updateTask, deleteTask, deleteSubTask } =
+    useTasksContext();
+  // 画面項目
+  const [title, setTitle] = useState("");
+  const [startValue, setStartValue] = useState<Date | null>(null);
+  const [endValue, setEndValue] = useState<Date | null>(null);
+  const [status, setStatus] = useState("");
+  const [memo, setMemo] = useState("");
   // 更新モードかどうか？
   const [isEditMode, setIsEditMode] = useState(false);
   const closeModal = () => {
@@ -54,6 +61,34 @@ const DetailTask: React.FC<Props> = ({
       await deleteTask(parentTask.id);
     }
   };
+
+  // 親タスク更新処理
+  const executeUpdateTask = async (
+    e: { preventDefault: () => void },
+    id: string
+  ) => {
+    e.preventDefault();
+    const newTask: Task = {
+      id,
+      title,
+      start: startValue || new Date(),
+      end: endValue || new Date(),
+      status,
+      memo,
+    };
+    await updateTask(newTask);
+    alert(`タスク「${title}」の更新が完了しました！`);
+  };
+
+  useEffect(() => {
+    const selectedTask = tasks.find((task) => task.id === parentTitle);
+    setTitle(selectedTask ? selectedTask.title : "");
+    setStartValue(selectedTask ? selectedTask.start : new Date());
+    setEndValue(selectedTask ? selectedTask.end : new Date());
+    setStatus(selectedTask ? selectedTask.status : "");
+    setMemo(selectedTask ? selectedTask.memo : "");
+  }, [parentTitle, tasks]);
+
   if (showFlag && parentTitle !== "" && parentTitle !== undefined) {
     const selectedTask = tasks.find((task) => task.id === parentTitle);
     // 選択した親タスクがない場合、アラート出す
@@ -73,27 +108,8 @@ const DetailTask: React.FC<Props> = ({
           <div className={styles.overlay}>
             <div className={styles.card}>
               <div className={styles.content}>
-                <form>
-                  {isEditMode ? (
-                    <TextField
-                      disabled={!isEditMode}
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="Title"
-                      label="Title"
-                      name="Title"
-                      autoComplete="Title"
-                      autoFocus
-                      value={selectedTask.title}
-                      placeholder="タスク名を入力してください。"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        console.log(e.target.value);
-                      }}
-                    />
-                  ) : (
-                    <h1>{selectedTask.title}</h1>
-                  )}
+                <form onSubmit={(e) => executeUpdateTask(e, selectedTask.id)}>
+                  <h1>{title}</h1>
                   {selectedSubTasks.length === 0 ? (
                     <Grid
                       container
@@ -136,9 +152,12 @@ const DetailTask: React.FC<Props> = ({
                       id="datetime-local"
                       label="Start"
                       type="datetime-local"
-                      defaultValue={convertDateToJST(selectedTask.start)}
+                      defaultValue={convertDateToJST(startValue || new Date())}
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      onChange={(e) => {
+                        setStartValue(new Date(e.target.value));
                       }}
                       style={{ width: 200 }}
                     />
@@ -147,9 +166,12 @@ const DetailTask: React.FC<Props> = ({
                       id="datetime-local"
                       label="End"
                       type="datetime-local"
-                      defaultValue={convertDateToJST(selectedTask.end)}
+                      defaultValue={convertDateToJST(endValue || new Date())}
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      onChange={(e) => {
+                        setEndValue(new Date(e.target.value));
                       }}
                       style={{ width: 200 }}
                     />
@@ -160,8 +182,8 @@ const DetailTask: React.FC<Props> = ({
                       disabled={!isEditMode}
                       labelId="Status"
                       id="Status"
-                      value={selectedTask.status}
-                      onChange={(e) => console.log(e.target.value as string)}
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value as string)}
                       label="Status"
                       style={{ width: 200 }}
                     >
@@ -174,13 +196,37 @@ const DetailTask: React.FC<Props> = ({
                   <TextField
                     id="Memo"
                     disabled={!isEditMode}
-                    value={selectedTask.memo}
+                    value={memo}
                     multiline
                     fullWidth
                     minRows={4}
                     variant="outlined"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setMemo(e.target.value);
+                    }}
                     style={{ marginTop: "20px" }}
                   />
+                  {isEditMode ? (
+                    <Grid
+                      container
+                      alignItems="center"
+                      justifyContent="center"
+                      direction="column"
+                    >
+                      <Grid item xs={12}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ width: 300 }}
+                          type="submit"
+                        >
+                          親タスク更新
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    <></>
+                  )}
                 </form>
                 <h2>Sub Task List</h2>
                 <ul>
