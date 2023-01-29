@@ -17,6 +17,7 @@ const App: React.FC = () => {
     //Firebase ver9 compliant
     const unSub = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
+        // stateにログイン情報をsetする
         dispatch(
           login({
             uid: authUser.uid,
@@ -25,6 +26,7 @@ const App: React.FC = () => {
         );
         setLoading(false);
       } else {
+        // stateの情報を全削除する
         dispatch(logout());
         setLoading(false);
       }
