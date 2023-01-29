@@ -40,6 +40,18 @@ const DetailTask: React.FC<Props> = ({
   const [endValue, setEndValue] = useState<Date | null>(null);
   const [status, setStatus] = useState("");
   const [memo, setMemo] = useState("");
+  const [selectedSubTasks, setSelectedSubTasks] = useState<SubTask[]>([]);
+  const [selectedTask, setSelectedTask] = useState<Task>({
+    id: "",
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    status: "",
+    memo: "",
+    userId: "",
+  });
+  // 連番管理用
+  const [count, setCount] = useState(2);
   // 更新モードかどうか？
   const [isEditMode, setIsEditMode] = useState(false);
   const closeModal = () => {
@@ -84,29 +96,50 @@ const DetailTask: React.FC<Props> = ({
     await updateTask(newTask);
     alert(`タスク「${title}」の更新が完了しました！`);
   };
-
+  // 項目を追加
+  const addSubTaskDisplay = () => {
+    const length = selectedSubTasks.length - 1;
+    // 最新のサブタスク
+    const latestSubTask = selectedSubTasks[length];
+    setSelectedSubTasks([
+      ...selectedSubTasks,
+      {
+        id: String(count),
+        title: "",
+        // 最新のサブタスクの終了日付
+        start: latestSubTask.end,
+        // 親タスクの終了日付
+        end: selectedTask.end,
+        parentTaskId: selectedTask.id,
+        parentTaskName: selectedTask.title,
+        status: "Todo",
+        memo: "",
+        userId: uid,
+      },
+    ]);
+    setCount(count + 1);
+  };
   useEffect(() => {
     const selectedTask = tasks.find((task) => task.id === parentTitle);
+    if (selectedTask !== undefined) setSelectedTask(selectedTask);
     setTitle(selectedTask ? selectedTask.title : "");
     setStartValue(selectedTask ? selectedTask.start : new Date());
     setEndValue(selectedTask ? selectedTask.end : new Date());
     setStatus(selectedTask ? selectedTask.status : "");
     setMemo(selectedTask ? selectedTask.memo : "");
-  }, [parentTitle, tasks]);
+    const searchedSubTasks = selectedTask
+      ? subTasks
+          .filter((subTask) => subTask.parentTaskId === selectedTask.id)
+          .sort(function (a, b) {
+            if (a.start < b.start) return -1;
+            if (a.start > b.start) return 1;
+            return 0;
+          })
+      : [];
+    setSelectedSubTasks(searchedSubTasks);
+  }, [parentTitle, subTasks, tasks]);
 
   if (showFlag && parentTitle !== "" && parentTitle !== undefined) {
-    const selectedTask = tasks.find((task) => task.id === parentTitle);
-    // 選択した親タスクがない場合、アラート出す
-    if (selectedTask == null)
-      throw new Error("親子タスクの紐付けを確認できませんでした。");
-    const searchedSubTasks = subTasks.filter(
-      (subTask) => subTask.parentTaskId === selectedTask.id
-    );
-    const selectedSubTasks = searchedSubTasks.sort(function (a, b) {
-      if (a.start < b.start) return -1;
-      if (a.start > b.start) return 1;
-      return 0;
-    });
     return (
       <>
         {showFlag ? ( // showFlagがtrueだったらModalを表示する
@@ -234,6 +267,13 @@ const DetailTask: React.FC<Props> = ({
                   )}
                 </form>
                 <h2>Sub Task List</h2>
+                {isEditMode ? (
+                  <button className="add-button" onClick={addSubTaskDisplay}>
+                    Add Sub Task
+                  </button>
+                ) : (
+                  <></>
+                )}
                 <ul>
                   {selectedSubTasks ? (
                     selectedSubTasks.map((subTask) => (

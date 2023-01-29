@@ -6,9 +6,10 @@ import {
   getDocs,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { SubTask } from "../types/sub-task";
 
 export const useSubTasks = () => {
@@ -17,23 +18,32 @@ export const useSubTasks = () => {
 
   /* actions */
   const fetchSubTasks = useCallback(async (): Promise<void> => {
-    let currentSubTasks: SubTask[] = [];
-    const documentData = query(collection(db, "subTasks"));
-    await getDocs(documentData).then((q) => {
-      // cloudstoreにはtimestampで保存されてしまうので、Date型への変換が必要
-      currentSubTasks = q.docs.map((doc) => ({
-        id: doc.id,
-        title: doc.data().title,
-        start: doc.data().start.toDate(),
-        end: doc.data().end.toDate(),
-        parentTaskId: doc.data().parentTaskId,
-        parentTaskName: doc.data().parentTaskName,
-        status: doc.data().status,
-        memo: doc.data().memo,
-        userId: doc.data().userId,
-      }));
+    // ユーザー情報取得
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // ログインしていれば中通る
+        let currentSubTasks: SubTask[] = [];
+        const documentData = query(
+          collection(db, "subTasks"),
+          where("userId", "==", user.uid)
+        );
+        await getDocs(documentData).then((q) => {
+          // cloudstoreにはtimestampで保存されてしまうので、Date型への変換が必要
+          currentSubTasks = q.docs.map((doc) => ({
+            id: doc.id,
+            title: doc.data().title,
+            start: doc.data().start.toDate(),
+            end: doc.data().end.toDate(),
+            parentTaskId: doc.data().parentTaskId,
+            parentTaskName: doc.data().parentTaskName,
+            status: doc.data().status,
+            memo: doc.data().memo,
+            userId: doc.data().userId,
+          }));
+        });
+        setSubTasks(currentSubTasks);
+      }
     });
-    setSubTasks(currentSubTasks);
   }, []);
 
   /* create(single data) */

@@ -21,7 +21,7 @@ type Props = {
 };
 
 const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
-  const { updateSubTask, deleteSubTask } = useTasksContext();
+  const { updateSubTask, deleteSubTask, createSubTask } = useTasksContext();
   // セッションからユーザー情報を取得
   const { uid } = useSelector(selectUser);
   // 画面項目
@@ -30,26 +30,48 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
   const [endValue, setEndValue] = useState<Date | null>(null);
   const [status, setStatus] = useState("");
   const [memo, setMemo] = useState("");
+  // 登録済idリスト
+  const [registeredIdList, setRegisteredIdList] = useState<string[]>([]);
   // 更新処理
   const executeUpdateSubTask = async (
     e: { preventDefault: () => void },
     subTask: SubTask
   ) => {
     e.preventDefault();
-    const { id, parentTaskId, parentTaskName } = subTask;
-    const newSubtask: SubTask = {
-      id,
-      title,
-      start: startValue || new Date(),
-      end: endValue || new Date(),
-      status,
-      parentTaskId,
-      parentTaskName,
-      memo,
-      userId: uid,
-    };
-    await updateSubTask(newSubtask);
-    alert(`タスク「${title}」の更新が完了しました！`);
+    if (subTask.id.length > 12 || registeredIdList.includes(subTask.id)) {
+      // 既存子タスクのIdなため、更新処理
+      const { id, parentTaskId, parentTaskName } = subTask;
+      const newSubtask: SubTask = {
+        id,
+        title,
+        start: startValue || new Date(),
+        end: endValue || new Date(),
+        status,
+        parentTaskId,
+        parentTaskName,
+        memo,
+        userId: uid,
+      };
+      await updateSubTask(newSubtask);
+      alert(`タスク「${title}」の更新が完了しました！`);
+    } else {
+      const { id, parentTaskId, parentTaskName } = subTask;
+      const newSubTask: SubTask = {
+        id,
+        title,
+        start: startValue || new Date(),
+        end: endValue || new Date(),
+        status,
+        memo,
+        parentTaskId,
+        parentTaskName,
+        userId: uid,
+      };
+      await createSubTask(newSubTask);
+      // 登録したことを画面側で認識するために、stateに反映する
+      setRegisteredIdList([...registeredIdList, newSubTask.id]);
+      alert(`タスク「${title}」の登録が完了しました！`);
+    }
   };
   // 子タスク削除処理
   const executeDeleteSubTask = async (subTask: SubTask) => {
@@ -63,7 +85,14 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
     setEndValue(subTask.end);
     setStatus(subTask.status);
     setMemo(subTask.memo);
-  }, [subTask.end, subTask.memo, subTask.start, subTask.status, subTask.title]);
+  }, [
+    endValue,
+    subTask.end,
+    subTask.memo,
+    subTask.start,
+    subTask.status,
+    subTask.title,
+  ]);
   return (
     <li>
       <form onSubmit={(e) => executeUpdateSubTask(e, subTask)}>
@@ -109,7 +138,7 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
             id="datetime-local"
             label="Start"
             type="datetime-local"
-            defaultValue={convertDateToJST(startValue || new Date())}
+            value={convertDateToJST(startValue || new Date())}
             InputLabelProps={{
               shrink: true,
             }}
@@ -123,7 +152,7 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
             id="datetime-local"
             label="End"
             type="datetime-local"
-            defaultValue={convertDateToJST(endValue || new Date())}
+            value={convertDateToJST(endValue || new Date())}
             InputLabelProps={{
               shrink: true,
             }}

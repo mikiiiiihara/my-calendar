@@ -6,6 +6,7 @@ import {
   getDocs,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { auth, db } from "../firebase";
@@ -19,30 +20,30 @@ export const useTasks = () => {
   /* actions */
   const fetchTasks = useCallback(async (): Promise<void> => {
     // ユーザー情報取得
-    let myId = "";
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (user) {
         // ログインしていれば中通る
-        myId = user.uid;
+        let currentTasks: Task[] = [];
+        // TODO: ログインしているユーザーのuidで絞る
+        const documentData = query(
+          collection(db, "tasks"),
+          where("userId", "==", user.uid)
+        );
+        await getDocs(documentData).then((q) => {
+          // cloudstoreにはtimestampで保存されてしまうので、Date型への変換が必要
+          currentTasks = q.docs.map((doc) => ({
+            id: doc.id,
+            title: doc.data().title,
+            start: doc.data().start.toDate(),
+            end: doc.data().end.toDate(),
+            status: doc.data().status,
+            memo: doc.data().memo,
+            userId: doc.data().userId,
+          }));
+        });
+        setTasks(currentTasks);
       }
     });
-    console.log(myId);
-    let currentTasks: Task[] = [];
-    // TODO: ログインしているユーザーのuidで絞る
-    const documentData = query(collection(db, "tasks"));
-    await getDocs(documentData).then((q) => {
-      // cloudstoreにはtimestampで保存されてしまうので、Date型への変換が必要
-      currentTasks = q.docs.map((doc) => ({
-        id: doc.id,
-        title: doc.data().title,
-        start: doc.data().start.toDate(),
-        end: doc.data().end.toDate(),
-        status: doc.data().status,
-        memo: doc.data().memo,
-        userId: doc.data().userId,
-      }));
-    });
-    setTasks(currentTasks);
   }, []);
   /* create(成功した場合、新規登録したデータのIDを返却する) */
   const createTask = useCallback(
