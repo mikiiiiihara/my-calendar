@@ -1,13 +1,13 @@
 import { SubTask } from "../types/sub-task";
 import { Task } from "../types/task";
-import { WeeklyTask } from "../types/weekly-task";
+import { CalendarTask } from "../types/calendar-task";
 import { checkColorOfStatus } from "./checkColorOfStatus";
 
 export const getWeeklyTasks = (
   tasks: Task[],
   subTasks: SubTask[]
-): WeeklyTask[] => {
-  const weeklyTasks: WeeklyTask[] = subTasks.map((subTask) => {
+): CalendarTask[] => {
+  const weeklyTasks: CalendarTask[] = subTasks.map((subTask) => {
     // 紐付く親タスクを取得する
     const myParentTask = tasks.find((task) => task.id === subTask.parentTaskId);
     // 紐付く親タスクがない場合、異常なのでエラー

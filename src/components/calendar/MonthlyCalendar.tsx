@@ -1,26 +1,23 @@
-import React, { useCallback, useState } from "react";
-
+import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
-import DetailTask from "../detailTask/DetailTask";
-import { getWeeklyTasks } from "../../function/getWeeklyTasks";
+import React, { useCallback, useState } from "react";
 import { useTasksContext } from "../../contexts/tasksContext";
-import CreateTask from "../createTask/CreateTask";
+import { getMonthlyTasks } from "../../function/getMonthlyTasks";
 import { CalendarTask } from "../../types/calendar-task";
+import CreateTask from "../createTask/CreateTask";
+import DetailTask from "../detailTask/DetailTask";
 
-const WeeklyCalendar: React.FC = () => {
-  const { tasks, subTasks } = useTasksContext();
-  let weeklyTasks: CalendarTask[] = [];
-  // サブタスクが空の場合、計算しない
-  if (subTasks.length !== 0) {
-    weeklyTasks = getWeeklyTasks(tasks, subTasks);
+const MonthlyCalendar: React.FC = () => {
+  const { tasks } = useTasksContext();
+  let monthlyTasks: CalendarTask[] = [];
+  if (tasks.length !== 0) {
+    monthlyTasks = getMonthlyTasks(tasks);
   }
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
-  const [selectedTitle, setSelectedTitle] = useState("");
+  const [selectedId, setSelectedId] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [start, setStart] = useState<Date | undefined>(undefined);
   const [end, setEnd] = useState<Date | undefined>(undefined);
@@ -32,27 +29,23 @@ const WeeklyCalendar: React.FC = () => {
     const calendarApi = arg.view.calendar;
     calendarApi.unselect(); // 選択した部分の選択を解除
   }, []);
-  const handleEventClick = useCallback(
-    (arg: EventClickArg) => {
-      // 選択した子タスクを取得
-      const selectedTask = subTasks.find(
-        (subTask) => subTask.id === arg.event.id
-      );
-      if (selectedTask == null)
-        throw new Error("選択した子タスクを確認できませんでした。");
-      // 選択した子タスクの親タスク名をセット
-      setSelectedTitle(selectedTask.parentTaskId);
-      setShowDetail(true);
-    },
-    [subTasks]
-  );
+  const handleEventClick = useCallback((arg: EventClickArg) => {
+    setSelectedId(arg.event.id);
+    // // 選択した子タスクを取得
+    // const selectedTask = tasks.find((subTask) => subTask.id === arg.event.id);
+    // if (selectedTask == null)
+    //   throw new Error("選択した子タスクを確認できませんでした。");
+    // // 選択した子タスクの親タスク名をセット
+    // setSelectedTitle(selectedTask.id);
+    setShowDetail(true);
+  }, []);
   return (
     <div>
-      {selectedTitle !== null && selectedTitle !== "" ? (
+      {selectedId !== null && selectedId !== "" ? (
         <DetailTask
           showFlag={showDetail}
           setShowModal={setShowDetail}
-          parentTitle={selectedTitle}
+          parentTitle={selectedId}
         />
       ) : (
         <></>
@@ -83,9 +76,9 @@ const WeeklyCalendar: React.FC = () => {
           startTime: "0:00",
           endTime: "24:00",
         }}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        events={weeklyTasks}
+        plugins={[dayGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        events={monthlyTasks}
         select={handleSelectClick} // カレンダー範囲選択時
         eventClick={handleEventClick} // イベントクリック時
       />
@@ -93,4 +86,4 @@ const WeeklyCalendar: React.FC = () => {
   );
 };
 
-export default WeeklyCalendar;
+export default MonthlyCalendar;

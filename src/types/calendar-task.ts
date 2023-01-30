@@ -1,4 +1,4 @@
-export type WeeklyTask = {
+export type CalendarTask = {
   id: string;
   title: string;
   start: string;

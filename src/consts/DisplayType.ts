@@ -1,4 +1,5 @@
 export const DISPLAY_TYPE = {
+  monthly: "monthly",
   weekly: "weekly",
   daily: "daily",
 } as const;
