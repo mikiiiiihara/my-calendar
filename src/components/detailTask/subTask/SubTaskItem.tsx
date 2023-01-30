@@ -85,14 +85,7 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
     setEndValue(subTask.end);
     setStatus(subTask.status);
     setMemo(subTask.memo);
-  }, [
-    endValue,
-    subTask.end,
-    subTask.memo,
-    subTask.start,
-    subTask.status,
-    subTask.title,
-  ]);
+  }, [subTask.end, subTask.memo, subTask.start, subTask.status, subTask.title]);
   return (
     <li>
       <form onSubmit={(e) => executeUpdateSubTask(e, subTask)}>
