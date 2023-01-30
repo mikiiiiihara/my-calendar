@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import styles from "./Auth.module.css";
 import { useDispatch } from "react-redux";
 import { updateUserProfile } from "../../features/userSlice";
-import { auth } from "../../firebase";
+import { auth, provider } from "../../firebase";
 //Firebase ver9 compliant
 import {
   sendPasswordResetEmail,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  signInWithPopup,
 } from "firebase/auth";
 
 import {
@@ -25,6 +26,7 @@ import {
 } from "@material-ui/core";
 
 import SendIcon from "@material-ui/icons/Send";
+import CameraIcon from "@material-ui/icons/Camera";
 import EmailIcon from "@material-ui/icons/Email";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
@@ -128,6 +130,10 @@ const Auth: React.FC = () => {
         displayName: username,
       })
     );
+  };
+  const signInGoogle = async () => {
+    //Firebase ver9 compliant
+    await signInWithPopup(auth, provider).catch((err) => alert(err.message));
   };
 
   return (
@@ -242,6 +248,16 @@ const Auth: React.FC = () => {
                 </span>
               </Grid>
             </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              startIcon={<CameraIcon />}
+              className={classes.submit}
+              onClick={signInGoogle}
+            >
+              SignIn with Google
+            </Button>
           </form>
           <Modal open={openModal} onClose={() => setOpenModal(false)}>
             <div style={getModalStyle()} className={classes.modal}>
