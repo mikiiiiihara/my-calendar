@@ -72,7 +72,6 @@ const DetailTask: React.FC<Props> = ({
         );
       };
       executeDeleteSubTask(subTasks);
-      // setSelectedTitle("");
       closeModal();
       await deleteTask(parentTask.id);
     }
@@ -107,7 +106,7 @@ const DetailTask: React.FC<Props> = ({
         id: String(count),
         title: "",
         // 最新のサブタスクの終了日付
-        start: latestSubTask.end,
+        start: latestSubTask ? latestSubTask.end : selectedTask.start,
         // 親タスクの終了日付
         end: selectedTask.end,
         parentTaskId: selectedTask.id,
