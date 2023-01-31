@@ -41,7 +41,7 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
     if (subTask.id.length > 12 || registeredIdList.includes(subTask.id)) {
       // 既存子タスクのIdなため、更新処理
       const { id, parentTaskId, parentTaskName } = subTask;
-      const newSubtask: SubTask = {
+      const newSubTask: SubTask = {
         id,
         title,
         start: startValue || new Date(),
@@ -52,8 +52,13 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
         memo,
         userId: uid,
       };
-      await updateSubTask(newSubtask);
-      alert(`タスク「${title}」の更新が完了しました！`);
+      const { start, end } = newSubTask;
+      if (start.getTime() >= end.getTime()) {
+        alert("開始日時より後の日時を、終了日付に入力してください");
+      } else {
+        await updateSubTask(newSubTask);
+        alert(`タスク「${title}」の更新が完了しました！`);
+      }
     } else {
       const { id, parentTaskId, parentTaskName } = subTask;
       const newSubTask: SubTask = {
@@ -67,10 +72,15 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
         parentTaskName,
         userId: uid,
       };
-      await createSubTask(newSubTask);
-      // 登録したことを画面側で認識するために、stateに反映する
-      setRegisteredIdList([...registeredIdList, newSubTask.id]);
-      alert(`タスク「${title}」の登録が完了しました！`);
+      const { start, end } = newSubTask;
+      if (start.getTime() >= end.getTime()) {
+        alert("開始日時より後の日時を、終了日付に入力してください");
+      } else {
+        await createSubTask(newSubTask);
+        // 登録したことを画面側で認識するために、stateに反映する
+        setRegisteredIdList([...registeredIdList, newSubTask.id]);
+        alert(`タスク「${title}」の登録が完了しました！`);
+      }
     }
   };
   // 子タスク削除処理

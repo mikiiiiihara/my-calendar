@@ -70,12 +70,17 @@ const CreateTask: React.FC<Props> = ({
       memo,
       userId: uid,
     };
-    const newParentTaskId = await createTask(createTaskDto);
-    // 親タスク登録後、連続して子タスクを追加できるように、親タスクIdを保持する
-    setParentTaskId(newParentTaskId);
-    setParentTaskName(title);
-    setIsRegistered(true);
-    alert("親タスクの登録が完了しました！");
+    const { start, end } = createTaskDto;
+    if (start.getTime() >= end.getTime()) {
+      alert("開始日時より後の日時を、終了日付に入力してください");
+    } else {
+      const newParentTaskId = await createTask(createTaskDto);
+      // 親タスク登録後、連続して子タスクを追加できるように、親タスクIdを保持する
+      setParentTaskId(newParentTaskId);
+      setParentTaskName(title);
+      setIsRegistered(true);
+      alert("親タスクの登録が完了しました！");
+    }
   };
 
   return (

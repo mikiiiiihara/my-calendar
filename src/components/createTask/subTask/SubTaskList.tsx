@@ -97,10 +97,14 @@ const SubTaskList: React.FC<Props> = ({
         parentTaskName,
         userId: uid,
       };
-      await createSubTask(newSubTask);
-      // 登録したことを画面側で認識するために、stateに反映する
-      setRegisteredIdList([...registeredIdList, newSubTask.id]);
-      alert("子タスクの登録が完了しました！");
+      if (start.getTime() >= end.getTime()) {
+        alert("開始日時より後の日時を、終了日付に入力してください");
+      } else {
+        await createSubTask(newSubTask);
+        // 登録したことを画面側で認識するために、stateに反映する
+        setRegisteredIdList([...registeredIdList, newSubTask.id]);
+        alert("子タスクの登録が完了しました！");
+      }
     }
   };
   useEffect(() => {

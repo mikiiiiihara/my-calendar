@@ -92,8 +92,13 @@ const DetailTask: React.FC<Props> = ({
       memo,
       userId: uid,
     };
-    await updateTask(newTask);
-    alert(`タスク「${title}」の更新が完了しました！`);
+    const { start, end } = newTask;
+    if (start.getTime() >= end.getTime()) {
+      alert("開始日時より後の日時を、終了日付に入力してください");
+    } else {
+      await updateTask(newTask);
+      alert(`タスク「${title}」の更新が完了しました！`);
+    }
   };
   // 項目を追加
   const addSubTaskDisplay = () => {
