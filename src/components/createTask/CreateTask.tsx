@@ -112,7 +112,11 @@ const CreateTask: React.FC<Props> = ({
                       shrink: true,
                     }}
                     onChange={(e) => {
-                      setStartValue(new Date(e.target.value));
+                      if (e.target.value !== "") {
+                        setStartValue(new Date(e.target.value));
+                      } else {
+                        alert("適切な日付または空でない日付を入力してください");
+                      }
                     }}
                     style={{ width: 200 }}
                   />
@@ -126,7 +130,11 @@ const CreateTask: React.FC<Props> = ({
                       shrink: true,
                     }}
                     onChange={(e) => {
-                      setEndValue(new Date(e.target.value));
+                      if (e.target.value !== "") {
+                        setEndValue(new Date(e.target.value));
+                      } else {
+                        alert("適切な日付または空でない日付を入力してください");
+                      }
                     }}
                     style={{ width: 200 }}
                   />
