@@ -13,7 +13,6 @@ export const getDailyTasks = (
     return 0;
   });
   const dailyTasks: Task[] = [];
-  let count = 1;
   for (const task of sortedTasks) {
     const taskList: Task[] = [];
     // ステータスの色を取得
@@ -26,14 +25,13 @@ export const getDailyTasks = (
       progress: 100,
       type: "project",
       hideChildren: false,
-      displayOrder: count,
+      displayOrder: 1,
       styles: {
         backgroundColor: statusColor,
         progressColor: statusColor,
       },
     };
     taskList.push(dailyTask);
-    count++;
     // 親タスクに紐付く子タスクを抽出
     const relatedSubTask = subTasks.filter(
       (subTask) => subTask.parentTaskId === task.id
@@ -48,16 +46,15 @@ export const getDailyTasks = (
         progress: 100,
         type: "task",
         project: task.id,
-        displayOrder: count,
+        displayOrder: 1,
         styles: {
           backgroundColor: checkColorOfStatus(subTask.status),
           progressColor: checkColorOfStatus(subTask.status),
         },
       };
       taskList.push(dailyTask);
-      count++;
     }
-    // 開始日が早い順にソートソートして、挿入する
+    // 開始日が早い順にソートして、挿入する
     const sortedTaskList = taskList.sort(function (a, b) {
       if (a.start < b.start) return -1;
       if (a.start > b.start) return 1;
