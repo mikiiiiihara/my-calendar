@@ -32,7 +32,7 @@ const DailyCalendar: React.FC = () => {
       {dailyTasks.length !== 0 ? (
         <Gantt
           tasks={dailyTasks}
-          viewMode={ViewMode.Hour}
+          viewMode={ViewMode.QuarterDay}
           todayColor="rgb(250,246,225)"
           barFill={80}
           listCellWidth="180px"
