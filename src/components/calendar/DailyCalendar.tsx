@@ -9,6 +9,7 @@ const DailyCalendar: React.FC = () => {
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
+  const [isChecked, setIsChecked] = useState(true);
   const { tasks, subTasks } = useTasksContext();
   let dailyTasks: Task[] = [];
   dailyTasks = getDailyTasks(tasks, subTasks);
@@ -29,13 +30,21 @@ const DailyCalendar: React.FC = () => {
         <></>
       )}
       <h1>Daily Calendar</h1>
+      <label className="Switch_Toggle">
+        <input
+          type="checkbox"
+          defaultChecked={isChecked}
+          onClick={() => setIsChecked(!isChecked)}
+        />
+      </label>
+      Show Task List
       {dailyTasks.length !== 0 ? (
         <Gantt
           tasks={dailyTasks}
           viewMode={ViewMode.QuarterDay}
           todayColor="rgb(250,246,225)"
           barFill={80}
-          listCellWidth="180px"
+          listCellWidth={isChecked ? "180px" : ""}
           onSelect={(e) => onSelect(e.project || e.id)}
           onExpanderClick={() => setShowDetail(true)}
         />
