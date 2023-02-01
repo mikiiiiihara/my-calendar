@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Gantt, Task, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import DetailTask from "../detailTask/DetailTask";
@@ -16,10 +16,10 @@ const DailyCalendar: React.FC = () => {
   let dailyTasks: Task[] = [];
   dailyTasks = getDailyTasks(tasks, subTasks);
   // タスクバークリック時、ツリーを表示
-  const onSelect = (parentTaskId: string) => {
+  const onSelect = useCallback((parentTaskId: string) => {
     setSelectedTitle(parentTaskId);
     setShowDetail(true);
-  };
+  }, []);
   return (
     <div className="scroll">
       {selectedTitle !== null && selectedTitle !== "" ? (

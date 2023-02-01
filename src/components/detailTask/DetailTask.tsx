@@ -194,7 +194,7 @@ const DetailTask: React.FC<Props> = ({
                       id="datetime-local"
                       label="Start"
                       type="datetime-local"
-                      defaultValue={convertDateToJST(startValue || new Date())}
+                      value={convertDateToJST(startValue || new Date())}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -214,7 +214,7 @@ const DetailTask: React.FC<Props> = ({
                       id="datetime-local"
                       label="End"
                       type="datetime-local"
-                      defaultValue={convertDateToJST(endValue || new Date())}
+                      value={convertDateToJST(endValue || new Date())}
                       InputLabelProps={{
                         shrink: true,
                       }}
