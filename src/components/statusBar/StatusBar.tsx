@@ -1,5 +1,4 @@
-import { Button, TextField } from "@material-ui/core";
-import { Stack } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { STATUS_COLOR } from "../../consts/StatusColor";
@@ -7,8 +6,9 @@ import { useTasksContext } from "../../contexts/tasksContext";
 import { selectUser } from "../../features/userSlice";
 import { AddStatusTypeDto } from "../../hooks/dto/add-status-type.dto";
 import { CreateOptionDto } from "../../hooks/dto/create-option.dto";
+import StatusBarItem from "./StatusBarItem";
 
-const StatusForm: React.FC = () => {
+const StatusBar: React.FC = () => {
   const { option, createOption, addStatusType } = useTasksContext();
   // セッションからユーザー情報を取得
   const { uid } = useSelector(selectUser);
@@ -70,16 +70,30 @@ const StatusForm: React.FC = () => {
           />
           <Button
             variant="contained"
-            color="primary"
-            style={{ width: 80 }}
+            style={{
+              width: 80,
+              backgroundColor: "rgb(48, 61, 78)",
+              color: "white",
+            }}
             type="submit"
           >
             登録
           </Button>
         </Stack>
       </form>
+      <h2>ステータス一覧</h2>
+      <div style={{ margin: "10px" }}>
+        {option.statusTypeList === undefined ||
+        option.statusTypeList.length === 0 ? (
+          <></>
+        ) : (
+          option.statusTypeList.map((statusType) => (
+            <StatusBarItem statusType={statusType} key={statusType.name} />
+          ))
+        )}
+      </div>
     </>
   );
 };
 
-export default StatusForm;
+export default StatusBar;

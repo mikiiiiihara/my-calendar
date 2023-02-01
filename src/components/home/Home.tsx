@@ -1,10 +1,11 @@
+import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { DisplayType, DISPLAY_TYPE } from "../../consts/DisplayType";
 import { auth } from "../../firebase";
 import DailyCalendar from "../calendar/DailyCalendar";
 import MonthlyCalendar from "../calendar/MonthlyCalendar";
 import WeeklyCalendar from "../calendar/WeeklyCalendar";
-import StatusForm from "../statusForm/StatusForm";
+import StatusBar from "../statusBar/StatusBar";
 
 const Home: React.FC = () => {
   const [displayType, setDisplayType] = useState<DisplayType>(
@@ -19,29 +20,59 @@ const Home: React.FC = () => {
   return (
     <div>
       <div className="nav">
-        <button className="nav-button" onClick={signOut}>
+        <Button
+          variant="contained"
+          style={{
+            width: 80,
+            height: 40,
+            backgroundColor: "rgb(48, 61, 78)",
+            color: "white",
+          }}
+          onClick={signOut}
+        >
           Logout
-        </button>
-        <button
-          className="nav-button"
+        </Button>
+        <Button
+          variant="contained"
+          style={{
+            width: 80,
+            height: 40,
+            margin: 4,
+            backgroundColor: "rgb(48, 61, 78)",
+            color: "white",
+          }}
           onClick={() => setDisplayType(DISPLAY_TYPE.monthly)}
         >
           monthly
-        </button>
-        <button
-          className="nav-button"
+        </Button>
+        <Button
+          variant="contained"
+          style={{
+            width: 80,
+            height: 40,
+            margin: 4,
+            backgroundColor: "rgb(48, 61, 78)",
+            color: "white",
+          }}
           onClick={() => setDisplayType(DISPLAY_TYPE.weekly)}
         >
           weekly
-        </button>
-        <button
-          className="nav-button"
+        </Button>
+        <Button
+          variant="contained"
+          style={{
+            width: 80,
+            height: 40,
+            margin: 4,
+            backgroundColor: "rgb(48, 61, 78)",
+            color: "white",
+          }}
           onClick={() => setDisplayType(DISPLAY_TYPE.daily)}
         >
           daily
-        </button>
+        </Button>
       </div>
-      <StatusForm />
+      <StatusBar />
       {displayType === DISPLAY_TYPE.monthly ? <MonthlyCalendar /> : <></>}
       {displayType === DISPLAY_TYPE.weekly ? <WeeklyCalendar /> : <></>}
       {displayType === DISPLAY_TYPE.daily ? <DailyCalendar /> : <></>}
