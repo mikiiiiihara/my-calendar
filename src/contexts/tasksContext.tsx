@@ -25,6 +25,7 @@ type ContextType = {
   option: Option;
   createOption: (createOptionDto: CreateOptionDto) => Promise<void>;
   addStatusType: (addStatusTypeDto: AddStatusTypeDto) => Promise<void>;
+  changeStatusColor: (addStatusTypeDto: AddStatusTypeDto) => Promise<void>;
 };
 
 export const TasksContext = createContext({} as ContextType);
@@ -38,7 +39,8 @@ export const TasksProvider: FC<Props> = ({ children }) => {
   const { tasks, createTask, deleteTask, updateTask } = useTasks();
   const { subTasks, createSubTask, deleteSubTask, updateSubTask } =
     useSubTasks();
-  const { option, createOption, addStatusType } = useOption();
+  const { option, createOption, addStatusType, changeStatusColor } =
+    useOption();
   return (
     <TasksContext.Provider
       value={{
@@ -53,6 +55,7 @@ export const TasksProvider: FC<Props> = ({ children }) => {
         option,
         createOption,
         addStatusType,
+        changeStatusColor,
       }}
     >
       {children}

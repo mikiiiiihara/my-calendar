@@ -62,6 +62,24 @@ export const useOption = () => {
     [option.statusTypeList]
   );
 
+  /* add statusType */
+  const changeStatusColor = useCallback(
+    async (addStatusTypeDto: AddStatusTypeDto): Promise<void> => {
+      const { uid, statusType } = addStatusTypeDto;
+      // 既存のstatusTypeリストに、今回追加分を加える
+      const newStatusTypeList = option.statusTypeList.map((statusTypeItem) => {
+        if (statusTypeItem.name === statusType.name) return statusType;
+        return statusTypeItem;
+      });
+      const userDocumentRef = doc(db, "option", uid);
+      await updateDoc(userDocumentRef, {
+        statusTypeList: newStatusTypeList,
+      });
+      // 更新情報をstateに反映
+      setOption({ statusTypeList: newStatusTypeList });
+    },
+    [option.statusTypeList]
+  );
   useEffect(() => {
     fetchOption();
   }, [fetchOption]);
@@ -70,5 +88,6 @@ export const useOption = () => {
     addStatusType,
     option,
     createOption,
+    changeStatusColor,
   };
 };

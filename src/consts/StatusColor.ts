@@ -11,4 +11,21 @@ export const STATUS_COLOR = [
   "#BAD3FF",
   "#B1F9D0",
   "#FF9872",
+  "rgb(225, 225, 225)",
+];
+
+export const STATUS_COLOR_NAME = [
+  { name: "red", code: "#ff6347" },
+  { name: "blue", code: "#4169e1" },
+  { name: "yellow", code: "#ffd700" },
+  { name: "green", code: "#3cb371" },
+  { name: "pink", code: "#FF6699" },
+  { name: "yamabuki", code: "#FFCC00" },
+  { name: "lightgreen", code: "#99FF33" },
+  { name: "shockingpink", code: "#FF77FF" },
+  { name: "lightpurple", code: "#DCC2FF" },
+  { name: "lightblue", code: "#BAD3FF" },
+  { name: "melon", code: "#B1F9D0" },
+  { name: "orange", code: "#FF9872" },
+  { name: "gray", code: "rgb(225, 225, 225)" },
 ];
