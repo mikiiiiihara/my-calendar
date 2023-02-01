@@ -21,6 +21,8 @@ const MonthlyCalendar: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [start, setStart] = useState<Date | undefined>(undefined);
   const [end, setEnd] = useState<Date | undefined>(undefined);
+
+  // カレンダーのクリックから、新規登録画面を表示
   const handleSelectClick = useCallback((arg: DateSelectArg) => {
     setStart(arg.start);
     setEnd(arg.end);
@@ -29,14 +31,18 @@ const MonthlyCalendar: React.FC = () => {
     const calendarApi = arg.view.calendar;
     calendarApi.unselect(); // 選択した部分の選択を解除
   }, []);
+
+  // 新規登録ボタンから、新規登録画面を表示
+  const selectClick = useCallback(() => {
+    setStart(new Date());
+    setEnd(new Date());
+    // 新規追加画面を表示
+    setShowCreateModal(true);
+  }, []);
+
+  // カレンダーのイベントクリックから、詳細画面を表示
   const handleEventClick = useCallback((arg: EventClickArg) => {
     setSelectedId(arg.event.id);
-    // // 選択した子タスクを取得
-    // const selectedTask = tasks.find((subTask) => subTask.id === arg.event.id);
-    // if (selectedTask == null)
-    //   throw new Error("選択した子タスクを確認できませんでした。");
-    // // 選択した子タスクの親タスク名をセット
-    // setSelectedTitle(selectedTask.id);
     setShowDetail(true);
   }, []);
   return (
@@ -57,6 +63,11 @@ const MonthlyCalendar: React.FC = () => {
         end={end || new Date()}
       />
       <h1>Weekly Calendar</h1>
+      <div className="nav">
+        <button className="add-button" onClick={selectClick}>
+          Create a new task
+        </button>
+      </div>
       <FullCalendar
         slotDuration="00:30:00" // 表示する時間軸の最小値
         selectable={true} // 日付選択可能

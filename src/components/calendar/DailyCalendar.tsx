@@ -4,10 +4,12 @@ import "gantt-task-react/dist/index.css";
 import DetailTask from "../detailTask/DetailTask";
 import { getDailyTasks } from "../../function/getDailyTasks";
 import { useTasksContext } from "../../contexts/tasksContext";
+import CreateTask from "../createTask/CreateTask";
 
 const DailyCalendar: React.FC = () => {
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
   const [isChecked, setIsChecked] = useState(true);
   const { tasks, subTasks } = useTasksContext();
@@ -29,7 +31,18 @@ const DailyCalendar: React.FC = () => {
       ) : (
         <></>
       )}
+      <CreateTask
+        showFlag={showCreateModal}
+        setShowModal={setShowCreateModal}
+        start={new Date()}
+        end={new Date()}
+      />
       <h1>Daily Calendar</h1>
+      <div className="nav">
+        <button className="add-button" onClick={() => setShowCreateModal(true)}>
+          Create a new task
+        </button>
+      </div>
       <label className="Switch_Toggle">
         <input
           type="checkbox"
