@@ -28,27 +28,33 @@ const StatusForm: React.FC = () => {
       // 登録処理
       await createOption(createOptionDto);
     } else {
-      const index = option.statusTypeList.length;
-      const addStatusTypeDto: AddStatusTypeDto = {
-        uid,
-        statusType: { name: status, color: STATUS_COLOR[index] },
-      };
-      // 更新処理
-      await addStatusType(addStatusTypeDto);
+      // すでに同名のステータスが存在しないかチェックする
+      const existStatusType = option.statusTypeList.find(
+        (statusType) => statusType.name === status
+      );
+      if (existStatusType === undefined) {
+        const index = option.statusTypeList.length;
+        const maxIndex = STATUS_COLOR.length;
+        const addStatusTypeDto: AddStatusTypeDto = {
+          uid,
+          statusType: {
+            name: status,
+            color:
+              maxIndex >= index
+                ? STATUS_COLOR[index]
+                : STATUS_COLOR[index - maxIndex],
+          },
+        };
+        // 更新処理
+        await addStatusType(addStatusTypeDto);
+      } else {
+        alert("入力されたステータスはすでに存在しています");
+      }
     }
   };
   return (
     <>
       <h2>ステータスを追加</h2>
-      {/* {option.statusTypeList === null || option.statusTypeList.length === 0 ? (
-        <form>
-          <p>create</p>
-        </form>
-      ) : (
-        <form>
-          <p>add</p>
-        </form>
-      )} */}
       <form onSubmit={(e) => registerStatusType(e)}>
         <Stack direction="row" spacing={3}>
           <TextField
