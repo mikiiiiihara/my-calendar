@@ -1,11 +1,12 @@
 import { Task } from "gantt-task-react";
+import { StatusType } from "../types/option";
 import { SubTask } from "../types/sub-task";
 import { Task as ParentTask } from "../types/task";
-import { checkColorOfStatus } from "./checkColorOfStatus";
 
 export const getDailyTasks = (
   tasks: ParentTask[],
-  subTasks: SubTask[]
+  subTasks: SubTask[],
+  statusType: StatusType[]
 ): Task[] => {
   const sortedTasks = tasks.sort(function (a, b) {
     if (a.start < b.start) return -1;
@@ -19,8 +20,14 @@ export const getDailyTasks = (
     const taskList: Task[] = [];
     // 現在日時以前に終了しているタスクは取得しない
     if (currentDate.getTime() < task.end.getTime()) {
+      // タスクのカラーを取得
+      const selectedStatus = statusType.find(
+        (statusItem) => statusItem.name === task.status
+      );
+      const backgroundColor = selectedStatus
+        ? selectedStatus.color
+        : "rgb(225, 225, 225)";
       // ステータスの色を取得
-      const statusColor = checkColorOfStatus(task.status);
       const dailyTask: Task = {
         id: task.id,
         name: task.title,
@@ -31,8 +38,8 @@ export const getDailyTasks = (
         hideChildren: false,
         displayOrder: 1,
         styles: {
-          backgroundColor: statusColor,
-          progressColor: statusColor,
+          backgroundColor: backgroundColor,
+          progressColor: backgroundColor,
         },
       };
       taskList.push(dailyTask);
@@ -42,6 +49,13 @@ export const getDailyTasks = (
       );
       // 紐付く子タスクを代入
       for (const subTask of relatedSubTask) {
+        // タスクのカラーを取得
+        const selectedStatus = statusType.find(
+          (statusItem) => statusItem.name === subTask.status
+        );
+        const backgroundColor = selectedStatus
+          ? selectedStatus.color
+          : "rgb(225, 225, 225)";
         const dailyTask: Task = {
           id: subTask.id,
           name: `  ${subTask.title}`,
@@ -52,8 +66,8 @@ export const getDailyTasks = (
           project: task.id,
           displayOrder: 1,
           styles: {
-            backgroundColor: checkColorOfStatus(subTask.status),
-            progressColor: checkColorOfStatus(subTask.status),
+            backgroundColor,
+            progressColor: backgroundColor,
           },
         };
         taskList.push(dailyTask);

@@ -4,6 +4,7 @@ import { auth } from "../../firebase";
 import DailyCalendar from "../calendar/DailyCalendar";
 import MonthlyCalendar from "../calendar/MonthlyCalendar";
 import WeeklyCalendar from "../calendar/WeeklyCalendar";
+import StatusForm from "../statusForm/StatusForm";
 
 const Home: React.FC = () => {
   const [displayType, setDisplayType] = useState<DisplayType>(
@@ -40,6 +41,7 @@ const Home: React.FC = () => {
           daily
         </button>
       </div>
+      <StatusForm />
       {displayType === DISPLAY_TYPE.monthly ? <MonthlyCalendar /> : <></>}
       {displayType === DISPLAY_TYPE.weekly ? <WeeklyCalendar /> : <></>}
       {displayType === DISPLAY_TYPE.daily ? <DailyCalendar /> : <></>}

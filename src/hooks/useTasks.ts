@@ -24,7 +24,7 @@ export const useTasks = () => {
       if (user) {
         // ログインしていれば中通る
         let currentTasks: Task[] = [];
-        // TODO: ログインしているユーザーのuidで絞る
+        // ログインしているユーザーのuidで絞る
         const documentData = query(
           collection(db, "tasks"),
           where("userId", "==", user.uid)

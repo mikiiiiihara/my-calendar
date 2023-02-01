@@ -21,7 +21,8 @@ type Props = {
 };
 
 const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
-  const { updateSubTask, deleteSubTask, createSubTask } = useTasksContext();
+  const { updateSubTask, deleteSubTask, createSubTask, option } =
+    useTasksContext();
   // セッションからユーザー情報を取得
   const { uid } = useSelector(selectUser);
   // 画面項目
@@ -184,10 +185,18 @@ const SubTaskItem: React.FC<Props> = ({ subTask, isEditMode }) => {
             label="Status"
             style={{ width: 200 }}
           >
-            <MenuItem value={"Todo"}>Todo</MenuItem>
-            <MenuItem value={"In Progress"}>In Progress</MenuItem>
-            <MenuItem value={"In Review"}>In Review</MenuItem>
-            <MenuItem value={"Done"}>Done</MenuItem>
+            {option.statusTypeList ? (
+              option.statusTypeList.map((status) => (
+                <MenuItem
+                  value={status.name}
+                  key={`${status.name} ${status.color}`}
+                >
+                  {status.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value={""}></MenuItem>
+            )}
           </Select>
         </FormControl>
         <TextField

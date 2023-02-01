@@ -1,9 +1,13 @@
 import { createContext, FC, ReactNode, useContext } from "react";
 import { CreateTaskDto } from "../hooks/dto/create-task.dto";
+import { useOption } from "../hooks/useOption";
 import { useSubTasks } from "../hooks/useSubTasks";
 import { useTasks } from "../hooks/useTasks";
 import { SubTask } from "../types/sub-task";
 import { Task } from "../types/task";
+import { Option } from "../types/option";
+import { AddStatusTypeDto } from "../hooks/dto/add-status-type.dto";
+import { CreateOptionDto } from "../hooks/dto/create-option.dto";
 
 type Props = {
   children: ReactNode;
@@ -18,6 +22,9 @@ type ContextType = {
   createSubTask: (subTask: SubTask) => Promise<void>;
   deleteSubTask: (id: string) => Promise<void>;
   updateSubTask: (subTask: SubTask) => Promise<void>;
+  option: Option;
+  createOption: (createOptionDto: CreateOptionDto) => Promise<void>;
+  addStatusType: (addStatusTypeDto: AddStatusTypeDto) => Promise<void>;
 };
 
 export const TasksContext = createContext({} as ContextType);
@@ -31,6 +38,7 @@ export const TasksProvider: FC<Props> = ({ children }) => {
   const { tasks, createTask, deleteTask, updateTask } = useTasks();
   const { subTasks, createSubTask, deleteSubTask, updateSubTask } =
     useSubTasks();
+  const { option, createOption, addStatusType } = useOption();
   return (
     <TasksContext.Provider
       value={{
@@ -42,6 +50,9 @@ export const TasksProvider: FC<Props> = ({ children }) => {
         createSubTask,
         deleteSubTask,
         updateSubTask,
+        option,
+        createOption,
+        addStatusType,
       }}
     >
       {children}

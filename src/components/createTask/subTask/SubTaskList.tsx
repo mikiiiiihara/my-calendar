@@ -33,7 +33,7 @@ const SubTaskList: React.FC<Props> = ({
   isRegistered,
 }) => {
   // 追加関数をcontextから取得
-  const { createSubTask } = useTasksContext();
+  const { createSubTask, option } = useTasksContext();
   // セッションからユーザー情報を取得
   const { uid } = useSelector(selectUser);
   // 連番管理用
@@ -295,10 +295,18 @@ const SubTaskList: React.FC<Props> = ({
                     label="Status"
                     style={{ width: 200 }}
                   >
-                    <MenuItem value={"Todo"}>Todo</MenuItem>
-                    <MenuItem value={"In Progress"}>In Progress</MenuItem>
-                    <MenuItem value={"In Review"}>In Review</MenuItem>
-                    <MenuItem value={"Done"}>Done</MenuItem>
+                    {option.statusTypeList ? (
+                      option.statusTypeList.map((status) => (
+                        <MenuItem
+                          value={status.name}
+                          key={`${status.name} ${status.color}`}
+                        >
+                          {status.name}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem value={""}></MenuItem>
+                    )}
                   </Select>
                 </FormControl>
                 <TextField

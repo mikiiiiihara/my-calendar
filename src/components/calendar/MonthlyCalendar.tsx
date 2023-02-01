@@ -10,10 +10,10 @@ import CreateTask from "../createTask/CreateTask";
 import DetailTask from "../detailTask/DetailTask";
 
 const MonthlyCalendar: React.FC = () => {
-  const { tasks } = useTasksContext();
+  const { tasks, option } = useTasksContext();
   let monthlyTasks: CalendarTask[] = [];
   if (tasks.length !== 0) {
-    monthlyTasks = getMonthlyTasks(tasks);
+    monthlyTasks = getMonthlyTasks(tasks, option.statusTypeList || []);
   }
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);

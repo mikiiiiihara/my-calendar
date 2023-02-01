@@ -12,9 +12,9 @@ const DailyCalendar: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState("");
   const [isChecked, setIsChecked] = useState(true);
-  const { tasks, subTasks } = useTasksContext();
+  const { tasks, subTasks, option } = useTasksContext();
   let dailyTasks: Task[] = [];
-  dailyTasks = getDailyTasks(tasks, subTasks);
+  dailyTasks = getDailyTasks(tasks, subTasks, option.statusTypeList || []);
   // タスクバークリック時、ツリーを表示
   const onSelect = useCallback((parentTaskId: string) => {
     setSelectedTitle(parentTaskId);

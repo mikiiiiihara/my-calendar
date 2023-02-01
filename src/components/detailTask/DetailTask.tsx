@@ -30,7 +30,7 @@ const DetailTask: React.FC<Props> = ({
   setShowModal,
   parentTitle,
 }) => {
-  const { tasks, subTasks, updateTask, deleteTask, deleteSubTask } =
+  const { tasks, subTasks, updateTask, deleteTask, deleteSubTask, option } =
     useTasksContext();
   // セッションからユーザー情報を取得
   const { uid } = useSelector(selectUser);
@@ -241,10 +241,18 @@ const DetailTask: React.FC<Props> = ({
                       label="Status"
                       style={{ width: 200 }}
                     >
-                      <MenuItem value={"Todo"}>Todo</MenuItem>
-                      <MenuItem value={"In Progress"}>In Progress</MenuItem>
-                      <MenuItem value={"In Review"}>In Review</MenuItem>
-                      <MenuItem value={"Done"}>Done</MenuItem>
+                      {option.statusTypeList ? (
+                        option.statusTypeList.map((status) => (
+                          <MenuItem
+                            value={status.name}
+                            key={`${status.name} ${status.color}`}
+                          >
+                            {status.name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value={""}></MenuItem>
+                      )}
                     </Select>
                   </FormControl>
                   <TextField

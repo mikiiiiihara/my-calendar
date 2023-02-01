@@ -12,11 +12,11 @@ import CreateTask from "../createTask/CreateTask";
 import { CalendarTask } from "../../types/calendar-task";
 
 const WeeklyCalendar: React.FC = () => {
-  const { tasks, subTasks } = useTasksContext();
+  const { tasks, subTasks, option } = useTasksContext();
   let weeklyTasks: CalendarTask[] = [];
   // サブタスクが空の場合、計算しない
   if (subTasks.length !== 0) {
-    weeklyTasks = getWeeklyTasks(tasks, subTasks);
+    weeklyTasks = getWeeklyTasks(tasks, subTasks, option.statusTypeList || []);
   }
   // 画面表示
   const [showDetail, setShowDetail] = useState(false);

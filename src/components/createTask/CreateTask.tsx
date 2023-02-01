@@ -31,7 +31,7 @@ const CreateTask: React.FC<Props> = ({
   end,
 }) => {
   // 追加関数をcontextから取得
-  const { createTask } = useTasksContext();
+  const { createTask, option } = useTasksContext();
   // セッションからユーザー情報を取得
   const { uid } = useSelector(selectUser);
   // 画面項目
@@ -154,10 +154,18 @@ const CreateTask: React.FC<Props> = ({
                     label="Status"
                     style={{ width: 200 }}
                   >
-                    <MenuItem value={"Todo"}>Todo</MenuItem>
-                    <MenuItem value={"In Progress"}>In Progress</MenuItem>
-                    <MenuItem value={"In Review"}>In Review</MenuItem>
-                    <MenuItem value={"Done"}>Done</MenuItem>
+                    {option.statusTypeList ? (
+                      option.statusTypeList.map((status) => (
+                        <MenuItem
+                          value={status.name}
+                          key={`${status.name} ${status.color}`}
+                        >
+                          {status.name}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem value={""}></MenuItem>
+                    )}
                   </Select>
                 </FormControl>
                 <TextField
